@@ -33,7 +33,7 @@ const countries = {
   Mexico: ["Mexico City", "Guadalajara", "Monterrey"],
   UAE: ["Dubai", "Abu Dhabi", "Sharjah"],
 };
-
+//for multi step styling in the form
 const steps = [
   {
     id: 1,
@@ -80,7 +80,7 @@ const FormPage = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
     setTouched((prev) => ({ ...prev, [name]: true }));
   };
-
+   //Validating condition for the form
   const validate = useCallback(() => {
     let tempErrors = {};
     if (!formData.fName) tempErrors.fName = "First name is required";
@@ -89,8 +89,11 @@ const FormPage = () => {
     if (!/\S+@\S+\.\S+/.test(formData.email))
       tempErrors.email = "Please enter a valid email";
     if (!formData.email) tempErrors.email = "Email is required";
-    if (!formData.password || formData.password.length < 6)
-      tempErrors.password = "Password must be at least 6 characters";
+    if (!formData.password ){
+      tempErrors.password = "Password is required";
+    }else if(!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?]).{6,}$/.test(formData.password)) {
+       tempErrors.password ="Password must be at least 6 characters, include one uppercase letter, one lowercase letter, one number, and one special character";
+    } 
     if (!formData.phoneNumber || !/^\d{10}$/.test(formData.phoneNumber))
       tempErrors.phoneNumber = "Phone number must be 10 digits";
     if (!formData.country) tempErrors.country = "Country is required";
@@ -141,11 +144,11 @@ const FormPage = () => {
     
     if (Object.keys(tempErrors).length === 0) {
       setIsSubmitted(true);
-      // Here you would normally navigate or submit to server
+     
       console.log("Form submitted:", formData);
     }
   };
-
+//All the fields for the form to input with tailwind Css
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
@@ -373,7 +376,7 @@ const FormPage = () => {
         return null;
     }
   };
-
+//On Submitting the form , documment section 
   if (isSubmitted) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
@@ -391,7 +394,7 @@ const FormPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
       <div className="max-w-2xl mx-auto">
-        {/* Progress Steps */}
+     
         <div className="mb-8">
           <div className="flex items-center justify-between">
             {steps.map((step, index) => {
@@ -429,7 +432,7 @@ const FormPage = () => {
           </div>
         </div>
 
-        {/* Form Card */}
+   
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
@@ -443,7 +446,7 @@ const FormPage = () => {
               {renderStepContent()}
             </div>
 
-            {/* Navigation Buttons */}
+        
             <div className="flex justify-between">
               <button
                 type="button"
