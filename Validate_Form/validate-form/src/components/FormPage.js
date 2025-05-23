@@ -1,5 +1,6 @@
 import React from "react";
 import { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Eye, EyeOff, User, Mail, Phone, MapPin, FileText, Check } from "lucide-react";
 
 const initialValue = {
@@ -68,6 +69,8 @@ const steps = [
 ];
 
 const FormPage = () => {
+    const navigate = useNavigate();
+
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState(initialValue);
   const [errors, setErrors] = useState({});
@@ -146,6 +149,7 @@ const FormPage = () => {
       setIsSubmitted(true);
      
       console.log("Form submitted:", formData);
+      navigate("/success", { state: formData });
     }
   };
 //All the fields for the form to input with tailwind Css
@@ -376,20 +380,6 @@ const FormPage = () => {
         return null;
     }
   };
-//On Submitting the form , documment section 
-  if (isSubmitted) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Check className="w-8 h-8 text-green-600" />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Registration Complete!</h2>
-          <p className="text-gray-600">Thank you for registering. Your account has been created successfully.</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">

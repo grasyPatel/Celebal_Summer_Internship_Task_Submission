@@ -1,6 +1,6 @@
 import React from 'react'
 import FormPage from './components/FormPage';
-
+import SuccessPage from './components/SuccessPage';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 const App = () => {
@@ -8,8 +8,7 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/" element={<FormPage />} />
-      
-
+        <Route path="/success" element={<SuccessPage />} />
       </Routes>
 
     </Router>
