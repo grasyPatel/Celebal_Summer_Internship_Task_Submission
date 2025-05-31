@@ -26,7 +26,7 @@ This app helps you manage tasks with due dates and times, filter and sort tasks,
 - `src/styles.css` — Stylesheet for the project
 ---
 
-# Breadth Testing Guide for Todo List
+# brief Testing Guide for Todo List
 
 This guide outlines a broad but shallow testing approach to verify all major functionalities of the Smart Todo List app.
 
