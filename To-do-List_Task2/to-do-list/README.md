@@ -1,70 +1,134 @@
-# Getting Started with Create React App
+# Smart Todo List
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern, responsive, and feature-rich Todo List application built with React.  
+This app helps you manage tasks with due dates and times, filter and sort tasks, and keeps your data saved in local storage.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- Add tasks with due date and time.
+- Mark tasks as completed.
+- Remove tasks.
+- Filter tasks by all, active, completed, and overdue.
+- Sort tasks by due date, task name, or creation date, ascending or descending.
+- Visual priority indicators for tasks (urgent, important, overdue, completed).
+- Persistent data saved in browser's localStorage.
+- Responsive and clean UI with smooth animations.
+- Keyboard accessible (press Enter to add a task).
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
+## Folder Structure
+ 
+- `src/components/ToDoList.jsx` — Main ToDo list React component  
+- `src/App.jsx` — Root component  
+- `src/index.js` — Entry point of the app  
+- `src/styles.css` — Stylesheet for the project
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# Breadth Testing Guide for Todo List
 
-### `npm test`
+This guide outlines a broad but shallow testing approach to verify all major functionalities of the Smart Todo List app.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## 1. Application Launch
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Open the app in a browser (`npm start`).
+- Verify the app loads without errors.
+- Check all initial UI elements (header, input form, buttons, filters, task list) appear correctly.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 2. Adding Tasks
 
-### `npm run eject`
+- Add a task with only description.
+- Add a task with due date only.
+- Add a task with due date and time.
+- Attempt to add a task with empty description (should show error or prevent submission).
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 3. Viewing Tasks
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- Confirm new tasks appear correctly.
+- Verify task details: description, due date, time.
+- Check priority color indicators for upcoming or overdue tasks.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## 4. Marking Tasks Completed
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Toggle task completion checkbox.
+- Verify visual change (strikethrough or color change).
+- Toggle back to active.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## 5. Deleting Tasks
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- Delete tasks using the trash icon.
+- Confirm tasks are removed from list.
+- Ensure no other tasks are affected.
 
-### Analyzing the Bundle Size
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## 6. Filtering Tasks
 
-### Making a Progressive Web App
+- Test filters: All, Active, Completed, Overdue.
+- Verify task list updates correctly based on filter.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+---
 
-### Advanced Configuration
+## 7. Sorting Tasks
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- Sort tasks by:
+  - Due Date (asc/desc)
+  - Task Name (A-Z / Z-A)
+  - Creation Date (newest/oldest)
+- Confirm task order changes appropriately.
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 8. Persistent Data
 
-### `npm run build` fails to minify
+- Add and complete tasks.
+- Reload or reopen browser.
+- Confirm tasks and states persist.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
+
+## 9. Keyboard Accessibility
+
+- Add tasks using keyboard (type + Enter).
+- Navigate buttons and inputs using Tab key.
+
+---
+
+## 10. Responsive Design
+
+- Resize window to simulate mobile, tablet, desktop.
+- Confirm UI adapts without layout issues.
+
+---
+
+## 11. Edge Cases
+
+- Add very long descriptions.
+- Add invalid dates/times (if allowed).
+- Add multiple tasks rapidly.
+- Delete all tasks and verify empty state.
+
+---
+
+## 12. Error Handling
+
+- Check for error messages on invalid input.
+- Ensure no crashes or console errors during usage.
+
+---
+
+*Happy Testing!* 🚀
+ 
+
+
