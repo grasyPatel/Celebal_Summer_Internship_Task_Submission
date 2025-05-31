@@ -19,6 +19,22 @@ A custom React form that validates multiple fields without using third-party lib
 - **Validations:** Inline error messages shown for each field
 - **Navigation:** On successful submission, user details are displayed on a new route
 > 📁 Located in: `Validate_Form/validate-form/`
+### 📌 Task 2: React To-Do-List
+
+A modern, responsive, and feature-rich Todo List application built with React.  
+This app helps you manage tasks with due dates and times, filter and sort tasks, and keeps your data saved in local storage.
+
+#### 🧩 Features:
+- Add tasks with due date and time.
+- Mark tasks as completed.
+- Remove tasks.
+- Filter tasks by all, active, completed, and overdue.
+- Sort tasks by due date, task name, or creation date, ascending or descending.
+- Visual priority indicators for tasks (urgent, important, overdue, completed).
+- Persistent data saved in browser's localStorage.
+- Responsive and clean UI with smooth animations.
+- Keyboard accessible (press Enter to add a task).
+> 📁 Located in: `To-do-List_Task2/to-do-list/`
 
 ---
 
