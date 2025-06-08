@@ -6,6 +6,7 @@ import SinglePage from "./pages/single/Single";
 import New from "./pages/new/New";
 import { userInputs, productInputs } from "./formSource";
 import "./style/dark.scss";
+import Stats from "./pages/stats/Stats";
 
 import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
@@ -37,6 +38,7 @@ const App = () => {
               />
             </Route>
           </Route>
+          <Route path="stats" element={<Stats />} />
         </Routes>
       </BrowserRouter>
     </div>
