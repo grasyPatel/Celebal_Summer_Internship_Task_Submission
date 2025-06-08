@@ -36,6 +36,26 @@ This app helps you manage tasks with due dates and times, filter and sort tasks,
 - Keyboard accessible (press Enter to add a task).
 > 📁 Located in: `To-do-List_Task2/to-do-list/`
 
+### 🛠️ Task 3: Admin Dashboard - React
+
+This is a modern and responsive **Admin Dashboard** built using **ReactJS**. It includes various pages, dark/light mode toggling, and multiple charts powered by **Recharts** for visualizing data.
+
+---
+
+###  🧩Features
+
+-  Dashboard with summary widgets
+-  Interactive charts (Line, Bar, Pie, Radar, Area, Scatter, etc.)
+-  Dark & Light Theme toggle
+-  Sidebar and Navbar navigation
+-  Pages for Users, Products, Orders, Stats, Settings, and more
+-  Component-based architecture
+-  Responsive & Clean UI using SCSS modules
+>  📁 Located in: `Dashbord_Task2/react_dashbord/`
+
+
+---
+
 ---
 
 ## 📌 Upcoming Tasks
