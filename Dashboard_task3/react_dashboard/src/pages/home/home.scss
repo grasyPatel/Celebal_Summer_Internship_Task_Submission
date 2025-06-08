@@ -3,7 +3,7 @@
     .container{
       
         flex: 6;
-        .widgets, {
+        .widgets {
             display: flex;
             padding: 1.5em;
             gap: 1.5em;
@@ -16,6 +16,16 @@
             padding-left: 20px;
             padding-right: 5px ;
         }
+        .list-container{
+            margin: 1.5em;
+
+            -webkit-box-shadow: 2px 4px 10px 1px rgba(0,0,0,0.47); 
+            box-shadow: 2px 4px 10px 1px rgba(210,210,210,0.47); 
+            border-radius: 10px;
+            
+           
+        }
+
         
     }
 }

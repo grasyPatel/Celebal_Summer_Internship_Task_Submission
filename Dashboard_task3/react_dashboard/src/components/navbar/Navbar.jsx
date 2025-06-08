@@ -7,8 +7,12 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
+import { useContext } from 'react';
+import { DarkModeContext } from '../../context/darkModeContext';
+
 
 const Navbar = () => {
+      const { dispatch } = useContext(DarkModeContext);
   return (
     <div className='navbar'>
         <div className="wrapper">
@@ -23,7 +27,7 @@ const Navbar = () => {
                     <LanguageIcon className='icon'/><sub>English</sub>
                 </div>
                 <div className="item">
-                    <DarkModeIcon className='icon'/>
+                    <DarkModeIcon className='icon' onClick={() => dispatch({ type: "TOGGLE" })}/>
                 </div>
                 <div className="item">
                     < FullscreenExitIcon  className='icon'/>

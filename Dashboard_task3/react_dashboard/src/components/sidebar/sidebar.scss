@@ -58,7 +58,7 @@
             }
         }
     }
-    .bottom{
+    .bottom-color{
         margin-top: 40px;
         display: flex;
         align-items: center;
@@ -77,11 +77,10 @@
                 background-color: whitesmoke;
             }
               &:nth-child(2){
-                background-color: rgb(10, 1, 42);
+                background-color:#111;
+                border: 1px solid gray;
             }
-              &:nth-child(3){
-                background-color: rgb(206, 199, 199);
-            }
+            
 
         }
     }
