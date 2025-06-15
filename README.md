@@ -36,11 +36,9 @@ This app helps you manage tasks with due dates and times, filter and sort tasks,
 - Keyboard accessible (press Enter to add a task).
 > 📁 Located in: `To-do-List_Task2/to-do-list/`
 
-### 🛠️ Task 3&4: Admin Dashboard - React
+### 🛠️ Task 3: Admin Dashboard - React
 
 This is a modern and responsive **Admin Dashboard** built using **ReactJS**. It includes various pages, dark/light mode toggling, and multiple charts powered by **Recharts** for visualizing data.
-
----
 
 ###  🧩Features
 
@@ -51,10 +49,22 @@ This is a modern and responsive **Admin Dashboard** built using **ReactJS**. It 
 -  Pages for Users, Products, Orders, Stats, Settings, and more
 -  Component-based architecture
 -  Responsive & Clean UI using SCSS modules
->  📁 Located in: `Dashbord_Task2/react_dashbord/`
+>  📁 Located in: `Dashbord_Task3/react_dashbord/`
 
+###  🛠️ Task 4: React Admin Dashboard
 
----
+A fully responsive, customizable Admin Dashboard built using **React**, **Material UI**, and a suite of powerful libraries such as **Nivo Charts**, **FullCalendar**, and **React Pro Sidebar**.
+
+###  🧩Features
+
+- 🌙 Light/Dark Mode using Material UI Theme & Context API
+- 📊 Visualize data using **Nivo Charting Library**
+- 📅 Schedule and manage events with **FullCalendar**
+- 📂 Clean and collapsible sidebar built with **React Pro Sidebar**
+- 🔄 Seamless page transitions with `react-router-dom`
+- 🧠 Organized modular folder structure
+>  📁 Located in: `Dashbord_Task4/dashbord-react-tast4/`
+  
 
 ---
 
