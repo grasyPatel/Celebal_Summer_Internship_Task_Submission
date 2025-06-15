@@ -1,70 +1,61 @@
-# Getting Started with Create React App
+# 🧩 React Admin Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A fully responsive, customizable Admin Dashboard built using **React**, **Material UI**, and a suite of powerful libraries such as **Nivo Charts**, **FullCalendar**, and **React Pro Sidebar**.
 
-## Available Scripts
+## 🚀 Features
 
-In the project directory, you can run:
+- 🌙 Light/Dark Mode using Material UI Theme & Context API
+- 📊 Visualize data using **Nivo Charting Library**
+- 📅 Schedule and manage events with **FullCalendar**
+- 📂 Clean and collapsible sidebar built with **React Pro Sidebar**
+- 🔄 Seamless page transitions with `react-router-dom`
+- 🧠 Organized modular folder structure
 
-### `npm start`
+## 🖼️ Pages Included
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Dashboard** (charts & summary)
+- **Team Management**
+- **Contacts List**
+- **Invoices Table**
+- **User Form Input**
+- **Bar / Pie / Line Charts**
+- **FAQs**
+- **Calendar** (FullCalendar integration)
+- **Geography Map**
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 📸 Screenshots
 
-### `npm test`
+### 🌈 Light Mode Dashboard
+<img width="1421" alt="Screenshot 2025-06-15 at 2 25 59 PM" src="https://github.com/user-attachments/assets/9f0ee7bb-42a8-4446-8c6c-122dff85eba9" />
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+### 🌙 Dark Mode Dashboard
+<img width="1403" alt="Screenshot 2025-06-15 at 2 25 51 PM" src="https://github.com/user-attachments/assets/1713d291-8d0e-40e3-8d5d-a568ec20aed1" />
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🧰 Built With
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+| Tool | Description |
+|------|-------------|
+| ⚛️ [React](https://reactjs.org/) | JavaScript library for building UI |
+| 💅 [Material UI (MUI)](https://mui.com/) | React components for faster and beautiful UI development |
+| 📊 [Nivo](https://nivo.rocks/) | Interactive and responsive charting library |
+| 📅 [FullCalendar](https://fullcalendar.io/) | Feature-rich calendar for managing events |
+| 📁 [React Pro Sidebar](https://github.com/azouaoui-med/react-pro-sidebar) | Sidebar navigation component |
+| 🔗 [React Router v6](https://reactrouter.com/en/main) | Client-side routing |
+| 🌐 [React Icons](https://react-icons.github.io/react-icons/) | Icon pack integration |
 
-### `npm run eject`
+## 📦 Getting Started
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+# 1. Clone the repository
+git clone https://github.com/your-username/dashboard-react-task4.git
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# 2. Navigate to the folder
+cd dashboard-react-task4
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+# 3. Install dependencies
+npm install
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+# 4. Run the development server
+npm start
