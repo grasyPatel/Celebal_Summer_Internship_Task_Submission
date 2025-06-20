@@ -1,4 +1,3 @@
-import TouchRipple from "@mui/material/ButtonBase/TouchRipple";
 import mongoose from "mongoose";
 const albumSchema=new mongoose.Schema({
     title:{
@@ -24,9 +23,9 @@ const albumSchema=new mongoose.Schema({
     
 
 
-}, {timestamps:TouchRipple});
+}, {timestamps:true});
 
-const Album=mongoose.model('Album',albumSchema);
-export default Album;
+const album=mongoose.model('album',albumSchema);
+export default album;
 
     

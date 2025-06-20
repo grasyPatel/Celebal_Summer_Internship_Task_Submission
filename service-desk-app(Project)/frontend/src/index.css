@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.ps-sidebar-container {
+  border-right: 1px solid #ddd;
+}
