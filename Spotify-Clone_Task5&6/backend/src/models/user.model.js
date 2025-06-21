@@ -1,23 +1,15 @@
 import mongoose from "mongoose";    
 
 const userSchema = new mongoose.Schema({
-    fullName:{
-        type:String,
-        required:true
-    },
-    imageUrl:{
-        type:String,
-        required:true
-    }, 
-    clerkId:{
-        type:String,
-        required:true,
-        unique:true
-    },
-    
-
-    
-    
+  clerkId: {
+    type: String,
+    required: true,
+   
+  },
+  firstName: String,
+  lastName: String,
+  fullName: { type: String, required: false }, // remove required
+  imageUrl: String,
 }, {timestamps:true} );
 
 
