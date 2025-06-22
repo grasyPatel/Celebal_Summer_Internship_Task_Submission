@@ -57,13 +57,31 @@ A fully responsive, customizable Admin Dashboard built using **React**, **Materi
 
 ###  🧩Features
 
-- 🌙 Light/Dark Mode using Material UI Theme & Context API
-- 📊 Visualize data using **Nivo Charting Library**
-- 📅 Schedule and manage events with **FullCalendar**
-- 📂 Clean and collapsible sidebar built with **React Pro Sidebar**
-- 🔄 Seamless page transitions with `react-router-dom`
-- 🧠 Organized modular folder structure
->  📁 Located in: `Dashbord_Task4/dashbord-react-tast4/`
+- Light/Dark Mode using Material UI Theme & Context API
+- Visualize data using **Nivo Charting Library**
+- Schedule and manage events with **FullCalendar**
+- Clean and collapsible sidebar built with **React Pro Sidebar**
+- Seamless page transitions with `react-router-dom`
+- Organized modular folder structure
+> Located in: `Dashbord_Task4/dashbord-react-tast4/`
+
+
+### 🎵 Task 4 & 5: Spotify Clone 2.0 (MP3)
+
+A powerful full-stack **Spotify Clone** built with the **MERN Stack**, featuring real-time music playback, admin dashboard, chat, and analytics.
+
+## 🚀 Features
+
+- Listen to music with play, pause, next, and previous functionality
+- Adjustable volume via slider
+- Admin dashboard to create and manage albums & songs
+- Real-time chat application integrated with music experience
+- Online/Offline user status indicator
+- See what others are listening to in real-time
+- Analytics dashboard with aggregated music data
+- Image uploads powered by Cloudinary
+- Authentication via Clerk.dev
+- Responsive and intuitive UI with material Ui ,Lucid-react, Tailwind Css
   
 
 ---
