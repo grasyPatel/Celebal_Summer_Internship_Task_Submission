@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Outlet } from "react-router-dom";
 import LeftSidebar from "../layout/components/LeftSidebar";
+import {FriendsActivity} from "../layout/components/FriendsActivity";
+
 
 interface ResizableHandleProps {
   onResize: (clientX: number) => void;
@@ -144,7 +146,7 @@ const MainLayout: React.FC = () => {
         <ResizablePanel 
           style={{ width: `${rightWidth}%` }}
         >
-          Friends activity components
+          <FriendsActivity/>
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>

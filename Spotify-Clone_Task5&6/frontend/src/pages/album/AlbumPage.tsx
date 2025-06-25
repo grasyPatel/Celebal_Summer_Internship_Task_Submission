@@ -16,6 +16,7 @@ const AlbumPage=()=>{
 	const { albumId } = useParams();
 	const { fetchAlbumById, currentAlbum, isLoading } = useMusicStore();
 	const { currentSong, isPlaying, playAlbum, togglePlay } = usePlayerStore();
+  console.log(currentAlbum?.title);
 
 	useEffect(() => {
 		if (albumId) fetchAlbumById(albumId);
@@ -63,7 +64,9 @@ const AlbumPage=()=>{
           {/* Album Header */}
           <div className="p-6 pb-4">
             <div className="flex gap-6 items-end flex-col md:flex-row">
+             
               <img
+             
                 src={currentAlbum?.imageUrl}
                 alt={currentAlbum?.title}
                 className="w-60 h-60 rounded-lg shadow-2xl mx-auto md:mx-0"
@@ -161,7 +164,8 @@ const AlbumPage=()=>{
 
                     {/* Release Date - Hidden on mobile */}
                     <div className="hidden md:flex items-center text-sm">
-                      {song.createdAt?.toISOString().split("T")[0]}
+                     {new Date(song.createdAt).toISOString().split("T")[0]}
+
                     </div>
 
                     {/* Duration */}

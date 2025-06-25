@@ -38,7 +38,8 @@ export const useMusicStore = create<MusicStoreState>((set) => ({
       isLoading:true,error:null
     })
     try{
-      const response=await axiosInstance.get(`/album/${id}`);
+      const response=await axiosInstance.get(`/albums/${id}`);
+      console.log(response.data)
       set({currentAlbum:response.data})
 
     }catch(error:any){
