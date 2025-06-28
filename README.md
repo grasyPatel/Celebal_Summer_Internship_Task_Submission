@@ -66,7 +66,7 @@ A fully responsive, customizable Admin Dashboard built using **React**, **Materi
 > Located in: `Dashbord_Task4/dashbord-react-tast4/`
 
 
-### 🎵 Task 4 & 5: Spotify Clone 2.0 (MP3)
+### 🎵 Task 5 & 6: Spotify Clone 2.0 (MP3)
 
 A powerful full-stack **Spotify Clone** built with the **MERN Stack**, featuring real-time music playback, admin dashboard, chat, and analytics.
 
