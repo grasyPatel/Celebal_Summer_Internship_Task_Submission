@@ -1,6 +1,6 @@
 import { useEffect, ReactNode } from "react";
 import { useChatStore } from "../../stores/useChatStore";
-import { HeadphonesIcon, Users, Music } from "lucide-react";
+import { Headphones, Users, Music } from "lucide-react";
 import { useUser } from "@clerk/clerk-react";
 
 interface ScrollAreaProps {
@@ -19,11 +19,6 @@ interface AvatarImageProps {
   className?: string;
 }
 
-interface AvatarFallbackProps {
-  children?: ReactNode;
-  className?: string;
-}
-
 const ScrollArea = ({ className = "", children }: ScrollAreaProps) => (
   <div className={`overflow-auto ${className}`}>{children}</div>
 );
@@ -36,35 +31,34 @@ const AvatarImage = ({
   src = "",
   alt = "",
   className = "",
-}: AvatarImageProps) => (
-  <img
-    src={src}
-    alt={alt}
-    className={`w-full h-full object-cover rounded-full ${className}`}
-    onError={(e) => {
-      const target = e.target as HTMLImageElement;
-      target.style.display = "none";
-    }}
-  />
-);
+}: AvatarImageProps) => {
+  if (!src) return null;
+  
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={`w-full h-full object-cover rounded-full ${className}`}
+      onError={(e) => {
+        const target = e.target as HTMLImageElement;
+        target.style.display = "none";
+      }}
+    />
+  );
+};
 
-const AvatarFallback = ({ children, className = "" }: AvatarFallbackProps) => (
-  <div
-    className={`w-full h-full bg-zinc-700 rounded-full flex items-center justify-center text-white font-medium ${className}`}
-  >
-    {children}
-  </div>
-);
 export const FriendsActivity = () => {
-  const { users, isLoading, error, fetchUsers } = useChatStore();
+  const { users, fetchUsers, onlineUsers, userActivities } = useChatStore();
   const { user } = useUser();
 
   useEffect(() => {
     if (user) fetchUsers();
   }, [fetchUsers, user]);
 
+  
+
   return (
-    <div className="h-full bg-zinc-900 rounded-lg flex flex-col">
+    <div className="h-full bg-zinc-900 rounded-lg flex flex-col mr-2">
       <div className="p-4 flex justify-between items-center border-b border-zinc-800">
         <div className="flex items-center gap-2">
           <Users className="size-5 shrink-0 text-zinc-400" />
@@ -79,25 +73,30 @@ export const FriendsActivity = () => {
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-4">
           {users.map((user) => {
-            //const activity = userActivities.get(user.clerkId);
-            //const isPlaying = activity && activity !== "Idle";
+            console.log("All userActivities:", Array.from(userActivities.entries()));
+
+            const activity = userActivities.get(user.clerkId);
+            
+            // Fix: Check if activity exists and is not "Idle"
+            const isPlaying = activity && activity !== "Idle" && activity.startsWith("Playing ");
+            const isOnline = onlineUsers.has(user.clerkId);
+            
             return (
               <div
-                key={user._id}
+                key={user._id || user.clerkId}
                 className="cursor-pointer hover:bg-zinc-800/50 p-3 rounded-md transition-colors group"
               >
                 <div className="flex items-start gap-3">
                   <div className="relative">
                     <div className="size-12 rounded-full p-[2px] bg-zinc-700">
-                      {/* Actual Avatar */}
                       <Avatar className="size-11 bg-zinc-900 rounded-full">
                         <AvatarImage src={user.imageUrl} alt={user.fullName} />
                       </Avatar>
                     </div>
                     <div
-                      className={`absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-zinc-900 
-                        
-                        `}
+                      className={`absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-zinc-900 ${
+                        isOnline ? "bg-green-500" : "bg-zinc-600"
+                      }`}
                       aria-hidden="true"
                     />
                   </div>
@@ -106,19 +105,34 @@ export const FriendsActivity = () => {
                       <span className="font-medium text-sm text-white">
                         {user.fullName}
                       </span>
+                      {isPlaying && <Music className="h-4 w-4 text-green-500" />}
                     </div>
-                    {/* {isPlaying ? (
-                      <div className='mt-1'>
-                        <div className='text-sm text-white font-medium truncate'>
-                          {activity.replace("Playing ", "").split(" by ")[0]}
-                        </div>
-                        <div className='text-xs text-zinc-400 truncate'>
-                          by {activity.split(" by ")[1]}
-                        </div>
+                    {isPlaying ? (
+                      <div className="mt-1">
+                        {(() => {
+                          // Parse the activity string more safely
+                          const activityText = activity.replace("Playing ", "");
+                          const parts = activityText.split(" by ");
+                          const songTitle = parts[0] || "Unknown Song";
+                          const artist = parts[1] || "Unknown Artist";
+                          
+                          return (
+                            <>
+                              <div className="text-sm text-white font-medium truncate">
+                                {songTitle}
+                              </div>
+                              <div className="text-xs text-zinc-400 truncate">
+                                by {artist}
+                              </div>
+                            </>
+                          );
+                        })()}
                       </div>
                     ) : (
-                      <div className='mt-1 text-xs text-zinc-400'>Not listening to anything</div>
-                    )} */}
+                      <div className="mt-1 text-xs text-zinc-400">
+                        {activity || "Idle"}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -139,7 +153,7 @@ const LoginPrompt = () => {
 
         {/* Main icon container */}
         <div className="relative bg-zinc-900 rounded-full p-4">
-          <HeadphonesIcon className="size-8 text-emerald-400 animate-pulse" />
+          <Headphones className="size-8 text-emerald-400 animate-pulse" />
         </div>
       </div>
 

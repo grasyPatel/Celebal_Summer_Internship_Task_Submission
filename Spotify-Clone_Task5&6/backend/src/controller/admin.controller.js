@@ -23,12 +23,12 @@ const uploadToCloudinary=async(file)=>{
 
 export const createSong=async(req,res)=>{
     try{
-        if(req.files || req.file.audioFile || !req.files.imageFile){
+        if(!req.files || !req.files.audioFile || !req.files.imageFile){
             return res.status(400).json({message:"Please uploadd the file"});
         }
         const {title, artist,albumId, duration}=req.body
-        const {audioFile}=req.files.audioFile;
-        const {imageFile}=req.files.imageFile;
+        const audioFile=req.files.audioFile;
+        const imageFile=req.files.imageFile;
         const  audioUrl =await uploadToCloudinary(audioFile);
         const imageUrl=await uploadToCloudinary(imageFile);
 
@@ -98,13 +98,13 @@ export const createAlbum=async(req,res)=>{
         const {title, artist, releaseYear}=req.body;
         const {imageFile}=req.files;
         const imageUrl=await uploadToCloudinary(imageFile);
-        const album=new album({
+        const Album=new album({
             title,
             artist,
             releaseYear,
             imageUrl
         })
-        await album.save();
+        await Album.save();
         return res.status(200).json({message:"Album created successfully"})
 
 
@@ -124,8 +124,9 @@ export const createAlbum=async(req,res)=>{
 export const deletealbum=async(req,res)=>{
     try{
         const {id}=req.params;
-        const album=await album.findById(id);
-        await album.remove();
+        const Album=await album.findById(id);
+        await Album.deleteOne();
+        await Song.deleteMany({albumId:id});
         return res.status(200).json({message:"Album deleted successfully"})
 
 
@@ -140,6 +141,6 @@ export const deletealbum=async(req,res)=>{
 }
 
 export const checkAdmin=async(req,res)=>{
-    res.status(200).json({admin:true});
+    res.status(200).json({isAdmin:true});
 }    
 

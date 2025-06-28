@@ -1,8 +1,9 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Outlet } from "react-router-dom";
+import AudioPlayer from "../layout/components/AudioPlayer";
 import LeftSidebar from "../layout/components/LeftSidebar";
 import {FriendsActivity} from "../layout/components/FriendsActivity";
-
+import {PlaybackControls} from "../layout/components/PlaybackControls";
 
 interface ResizableHandleProps {
   onResize: (clientX: number) => void;
@@ -87,6 +88,8 @@ const MainLayout: React.FC = () => {
   
   const containerRef = useRef<HTMLDivElement>(null);
 
+
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -113,42 +116,53 @@ const MainLayout: React.FC = () => {
     setRightWidth(Math.max(minWidth, Math.min(maxWidth, newWidth)));
   }, []);
 
-  const mainWidth = 100 - leftWidth - rightWidth;
+  const mainWidth = isMobile ? 100 - leftWidth : 100 - leftWidth - rightWidth;
 
   return (
-    <div ref={containerRef}>
-      <ResizablePanelGroup direction="horizontal" className="">
-        {/* Left */}
-        <ResizablePanel 
-          style={{ width: `${leftWidth}%` }}
-        >
-          <LeftSidebar/>
-        </ResizablePanel>
+    <div ref={containerRef} className="h-screen flex flex-col bg-black text-white">
+      {/* Audio Player at the top */}
+      <AudioPlayer/>
+      
+      <div className="flex-1 pb-20">
+        <ResizablePanelGroup direction="horizontal" className="mt-2">
+          {/* Left Sidebar */}
+          <ResizablePanel 
+            style={{ width: `${leftWidth}%` }}
+          >
+            <LeftSidebar/>
+          </ResizablePanel>
+          
+          <ResizableHandle 
+            className="w-2 bg-black rounded-lg transition-colors" 
+            onResize={handleLeftResize}
+          />
+          
+          {/* Main Content */}
+          <ResizablePanel 
+            style={{ width: `${mainWidth}%` }}
+          >
+            <Outlet/>
+          </ResizablePanel>
+          
+          {/* Right Sidebar - Only show on desktop */}
+          {!isMobile && (
+            <>
+              <ResizableHandle 
+                className="w-2 bg-black rounded-lg transition-colors" 
+                onResize={handleRightResize}
+              />
+              
+              <ResizablePanel 
+                style={{ width: `${rightWidth}%` }}
+              >
+                <FriendsActivity/>
+              </ResizablePanel>
+            </>
+          )}
+        </ResizablePanelGroup>
         
-        <ResizableHandle 
-          className="w-2 bg-black rounded-lg transition-colors" 
-          onResize={handleLeftResize}
-        />
-        
-        {/* Main */}
-        <ResizablePanel 
-          style={{ width: `${mainWidth}%` }}
-        >
-          <Outlet/>
-        </ResizablePanel>
-        
-        <ResizableHandle 
-          className="w-2 bg-black rounded-lg transition-colors" 
-          onResize={handleRightResize}
-        />
-        
-        {/* Right */}
-        <ResizablePanel 
-          style={{ width: `${rightWidth}%` }}
-        >
-          <FriendsActivity/>
-        </ResizablePanel>
-      </ResizablePanelGroup>
+        <PlaybackControls />
+      </div>
     </div>
   );
 };

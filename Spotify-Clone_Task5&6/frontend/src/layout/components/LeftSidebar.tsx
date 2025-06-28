@@ -60,7 +60,7 @@ const LeftSidebar = () => {
   },[fetchAlbums])
   
   return (
-    <Box className="h-full flex flex-col gap-2">
+    <Box className="h-full flex flex-col gap-2 ml-2">
       <Box className="rounded-lg bg-zinc-900 p-4">
         <StyledButton
           component={Link}

@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import LogoutIcon from '@mui/icons-material/Logout';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import LoginIcon from '@mui/icons-material/Login';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
@@ -17,6 +18,8 @@ const SidebarLayout = ({ children }) => {
   const { darkMode, setDarkMode } = useContext(ThemeContext);
   const { currentUser } = useContext(AuthContext);
   const [collapsed, setCollapsed] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
+
   const navigate = useNavigate();
 
   const handleLogout = () =>
@@ -78,15 +81,23 @@ const SidebarLayout = ({ children }) => {
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+      <button
+  className="md:hidden p-2 absolute top-4 left-4 z-50 bg-white dark:bg-gray-800 border rounded"
+  onClick={() => setShowSidebar(!showSidebar)}
+>
+  <MenuIcon />
+</button>
       <Sidebar
         collapsed={collapsed}
         backgroundColor="transparent"
+        className="fixed md:static z-40"
         rootStyles={{
           ...sidebarStyles,
           color: darkMode ? '#e2e8f0' : '#1e293b',
           height: '100vh',
           position: 'relative',
           overflow: 'hidden',
+          
         }}
         transitionDuration={300}
       >
@@ -136,6 +147,13 @@ const SidebarLayout = ({ children }) => {
             >
               Dashboard
             </MenuItem>
+
+            <MenuItem
+  icon={<ReceiptLongIcon />}
+  component={<Link to="/tickets" />}
+>
+  Tickets
+</MenuItem>
 
             {currentUser ? (
               <MenuItem 
@@ -189,7 +207,7 @@ const SidebarLayout = ({ children }) => {
       </Sidebar>
 
       {/* Main Content */}
-      <main className={`flex-1 transition-all duration-300 ${
+      <main className={`flex-1 p-4 md:ml-0 transition-all duration-300 ${
         collapsed ? 'ml-0' : 'ml-0'
       }`}>
         <div className={`min-h-screen p-6 ${

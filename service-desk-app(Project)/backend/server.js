@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.js";
 import { connectDB } from "./lib/db.js";
+import ticketRoutes from "./routes/tickets.js";
+
 dotenv.config();
 
 const app = express();
@@ -14,6 +16,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/tickets', ticketRoutes);
 
 
 const PORT =process.env.PORT || 5050;
