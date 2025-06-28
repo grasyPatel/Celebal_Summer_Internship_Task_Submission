@@ -72,7 +72,7 @@ npm install
 ```
 **🔐 Create a .env file inside the frontend folder**
 ```bash
-VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+REACT_APP_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 ```
 **Start the frontend:**
 ```bash
@@ -84,9 +84,13 @@ npm start
 - GET /api/songs – Fetch all songs
 - POST /api/auth/authCallback – Auth webhook
 
-### 🚧 Project Status
+### 🎧 Preview
 
-⚠️ **This project is currently under development (Week 6).**  
-The backend and home page are set up. I’ll be completing the full project by **next week**. Stay tuned for updates!
+![Spotify Clone(MP3) <img width="1457" alt="Screenshot 2025-06-29 at 12 01 50 AM" src="https://github.com/user-attachments/assets/21fa3c43-92f9-44ef-b276-b32b91e47f2a" />
+<img width="1451" alt="Screenshot 2025-06-29 at 12 02 05 AM" src="https://github.com/user-attachments/assets/754aa694-39ca-4c4c-a535-59e4ed3e99d9" />
+
+<img width="1450" alt="Screenshot 2025-06-29 at 12 02 15 AM" src="https://github.com/user-attachments/assets/48323b9f-0356-4bff-9601-e79a546fa838" />
+
+
 
 
