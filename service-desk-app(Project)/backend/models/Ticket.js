@@ -6,7 +6,10 @@ const ticketSchema = new mongoose.Schema({
   description: String,
   status: { type: String, default: 'Open' }, 
   createdBy: { type: String, required: true }, 
-  assignedTo: String, 
+  assignedTo: { type: String, default: null },
+
+  category: { type: String, default: 'General' },
+  priority: { type: String, default: 'Medium' }, 
   createdAt: { type: Date, default: Date.now }
 });
 

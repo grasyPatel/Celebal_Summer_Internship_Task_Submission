@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }) => {
         const res = await axios.post('http://localhost:5050/api/auth/user', {
           uid: user.uid,
           email: user.email,
+          fullName: user.displayName || 'User',
         });
         setCurrentUser(user);
         setRole(res.data.role);

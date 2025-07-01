@@ -3,6 +3,7 @@ import { auth } from '../services/firebase';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, User, UserPlus, ArrowRight, AlertCircle, Check, X } from 'lucide-react';
+import axios from 'axios'; 
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -66,7 +67,7 @@ const Signup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    
+
     const validationError = validateForm();
     if (validationError) {
       setError(validationError);
@@ -75,22 +76,58 @@ const Signup = () => {
 
     setLoading(true);
     setError('');
-    
+
     try {
+      // Create user with Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(
         auth, 
         formData.email, 
         formData.password
       );
-      
-      // Update user profile with name
+
+      // Construct full name
+      const fullName = `${formData.firstName.trim()} ${formData.lastName.trim()}`;
+
+      // Update Firebase profile
       await updateProfile(userCredential.user, {
-        displayName: `${formData.firstName} ${formData.lastName}`
+        displayName: fullName,
       });
-      
+
+      // Prepare user data for backend
+      const userData = {
+        uid: userCredential.user.uid,
+        email: formData.email.trim(),
+        fullName: fullName,
+        role: 'user',
+      };
+
+      console.log('Sending to backend:', userData);
+
+      // Send to backend
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE}/api/auth/user`, userData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log('Backend response:', response.data);
       navigate('/dashboard');
+      
     } catch (err) {
-      setError(err.message.replace('Firebase: ', ''));
+      console.error('Signup error:', err);
+      
+      // Handle different types of errors
+      if (err.response) {
+        // Backend error
+        console.error('Backend error:', err.response.data);
+        setError(err.response.data.message || 'Failed to create account');
+      } else if (err.code) {
+        // Firebase error
+        setError(err.message.replace('Firebase: ', ''));
+      } else {
+        // Network or other error
+        setError('Network error. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -335,8 +372,6 @@ const Signup = () => {
                 </div>
               </div>
             )}
-
-            
 
             {/* Create Account Button */}
             <button

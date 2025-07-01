@@ -16,11 +16,12 @@ import PersonIcon from '@mui/icons-material/Person';
 
 const SidebarLayout = ({ children }) => {
   const { darkMode, setDarkMode } = useContext(ThemeContext);
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser,role } = useContext(AuthContext);
   const [collapsed, setCollapsed] = useState(false);
   const [showSidebar, setShowSidebar] = useState(true);
 
   const navigate = useNavigate();
+  console.log(currentUser);
 
   const handleLogout = () =>
     import('firebase/auth').then(({ getAuth, signOut }) => {
@@ -79,168 +80,201 @@ const SidebarLayout = ({ children }) => {
     }
   };
 
+  const sidebarWidth = collapsed ? '80px' : '280px';
+
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-      <button
-  className="md:hidden p-2 absolute top-4 left-4 z-50 bg-white dark:bg-gray-800 border rounded"
-  onClick={() => setShowSidebar(!showSidebar)}
->
-  <MenuIcon />
-</button>
-      <Sidebar
-        collapsed={collapsed}
-        backgroundColor="transparent"
-        className="fixed md:static z-40"
-        rootStyles={{
-          ...sidebarStyles,
-          color: darkMode ? '#e2e8f0' : '#1e293b',
-          height: '100vh',
-          position: 'relative',
-          overflow: 'hidden',
-          
-        }}
-        transitionDuration={300}
-      >
-        {/* Header Section */}
-        <div className={`p-4 border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'} mb-4`}>
-          {!collapsed && (
-            <div className="flex items-center space-x-3">
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                darkMode ? 'bg-indigo-600' : 'bg-indigo-500'
-              } shadow-lg`}>
-                <PersonIcon className="text-white text-xl" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-sm">
-                  {currentUser?.displayName || 'User'}
-                </h3>
-                <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                  {currentUser ? 'Online' : 'Offline'}
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <Menu
-          menuItemStyles={menuItemStyles}
-          className="px-2"
+      {/* Mobile menu toggle button */}
+      {!showSidebar && (
+        <button
+          className="md:hidden fixed top-4 left-4 z-50 p-2 bg-white dark:bg-gray-800 border rounded-lg shadow-lg"
+          onClick={() => setShowSidebar(true)}
         >
-          {/* Toggle Button */}
-          <MenuItem 
-            icon={<MenuIcon />} 
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              backgroundColor: darkMode ? 'rgba(79, 70, 229, 0.1)' : 'rgba(79, 70, 229, 0.05)',
-              marginBottom: '16px',
-              borderRadius: '12px',
-            }}
-          >
-            {collapsed ? 'Expand' : 'Collapse'}
-          </MenuItem>
+          <MenuIcon />
+        </button>
+      )}
 
-          {/* Navigation Items */}
-          <div className="space-y-2">
-            <MenuItem
-              icon={<DashboardIcon />}
-              component={<Link to="/dashboard" />}
+      {/* Mobile overlay */}
+      {showSidebar && (
+        <div 
+          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+          onClick={() => setShowSidebar(false)}
+        />
+      )}
+
+      {/* Fixed Sidebar */}
+      <div 
+        className={`fixed top-0 left-0 h-full z-40 transition-transform duration-300 ${
+          showSidebar ? 'translate-x-0' : '-translate-x-full'
+        } md:translate-x-0`}
+        style={{ width: sidebarWidth }}
+      >
+        <Sidebar
+          collapsed={collapsed}
+          backgroundColor="transparent"
+          rootStyles={{
+            ...sidebarStyles,
+            color: darkMode ? '#e2e8f0' : '#1e293b',
+            height: '100vh',
+            width: '100%',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+          transitionDuration={300}
+        >
+          {/* Close button for mobile */}
+          <div className="md:hidden absolute top-4 right-4 z-10">
+            <button
+              onClick={() => setShowSidebar(false)}
+              className={`p-1 rounded ${darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-black'}`}
             >
-              Dashboard
-            </MenuItem>
+              ✕
+            </button>
+          </div>
 
-            <MenuItem
-  icon={<ReceiptLongIcon />}
-  component={<Link to="/tickets" />}
->
-  Tickets
-</MenuItem>
-
-            {currentUser ? (
-              <MenuItem 
-                icon={<LogoutIcon />} 
-                onClick={handleLogout}
-                style={{
-                  color: darkMode ? '#ef4444' : '#dc2626',
-                }}
-              >
-                Logout
-              </MenuItem>
-            ) : (
-              <MenuItem 
-                icon={<LoginIcon />} 
-                component={<Link to="/" />}
-              >
-                Login
-              </MenuItem>
+          {/* Header Section */}
+          <div className={`p-4 border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'} mb-4`}>
+            {!collapsed && (
+              <div className="flex items-center space-x-3">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                  darkMode ? 'bg-indigo-600' : 'bg-indigo-500'
+                } shadow-lg`}>
+                  <PersonIcon className="text-white text-xl" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm">
+                    {currentUser?.displayName || 'User'}
+                  </h3>
+                  <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    {currentUser ? 'Online' : 'Offline'}
+                  </p>
+                </div>
+              </div>
             )}
+          </div>
 
-            {/* Theme Toggle */}
-            <MenuItem
-              icon={darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
-              onClick={() => setDarkMode(!darkMode)}
+          <Menu
+            menuItemStyles={menuItemStyles}
+            className="px-2"
+          >
+            {/* Toggle Button */}
+            <MenuItem 
+              icon={<MenuIcon />} 
+              onClick={() => setCollapsed(!collapsed)}
               style={{
-                backgroundColor: darkMode 
-                  ? 'rgba(245, 158, 11, 0.1)' 
-                  : 'rgba(245, 158, 11, 0.05)',
-                color: darkMode ? '#fbbf24' : '#d97706',
+                backgroundColor: darkMode ? 'rgba(79, 70, 229, 0.1)' : 'rgba(79, 70, 229, 0.05)',
+                marginBottom: '16px',
+                borderRadius: '12px',
               }}
             >
-              {darkMode ? 'Light Mode' : 'Dark Mode'}
+              {collapsed ? 'Expand' : 'Collapse'}
             </MenuItem>
-          </div>
-        </Menu>
 
-        {/* Footer Section */}
-        {!collapsed && (
-          <div className={`absolute bottom-4 left-4 right-4 p-3 rounded-lg ${
-            darkMode 
-              ? 'bg-gray-800/50 border border-gray-700' 
-              : 'bg-white/50 border border-gray-200'
-          } backdrop-blur-sm`}>
-            <p className={`text-xs text-center ${
-              darkMode ? 'text-gray-400' : 'text-gray-500'
-            }`}>
-              © 2025 Your App
-            </p>
-          </div>
-        )}
-      </Sidebar>
+            {/* Navigation Items */}
+            <div className="space-y-2">
+              <MenuItem
+                icon={<DashboardIcon />}
+                component={<Link to="/dashboard" />}
+                onClick={() => setShowSidebar(false)} // Close mobile menu on navigation
+              >
+                Dashboard
+              </MenuItem>
+              {role === 'admin' && (
+  <MenuItem
+    icon={<ReceiptLongIcon />}
+    component={<Link to="/admin/tickets" />}
+  >
+    All Tickets (Admin)
+  </MenuItem>
+)}
 
-      {/* Main Content */}
-      <main className={`flex-1 p-4 md:ml-0 transition-all duration-300 ${
-        collapsed ? 'ml-0' : 'ml-0'
-      }`}>
-        <div className={`min-h-screen p-6 ${
-          darkMode 
-            ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100' 
-            : 'bg-gradient-to-br from-white via-gray-50 to-gray-100 text-gray-900'
-        }`}>
-          {/* Content Header */}
-          <div className={`mb-6 p-4 rounded-xl ${
-            darkMode 
-              ? 'bg-gray-800/30 border border-gray-700/50' 
-              : 'bg-white/60 border border-gray-200/50'
-          } backdrop-blur-sm shadow-sm`}>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              Welcome to Dashboard
-            </h1>
-            <p className={`text-sm mt-1 ${
-              darkMode ? 'text-gray-400' : 'text-gray-600'
-            }`}>
-              Manage your application with style
-            </p>
-          </div>
+              {role === 'user' && (
+              <MenuItem
+                icon={<ReceiptLongIcon />}
+                component={<Link to="/tickets" />}
+                onClick={() => setShowSidebar(false)} // Close mobile menu on navigation
+              >
+                Tickets
+              </MenuItem>
+              )}
 
-          {/* Children Content */}
-          <div className={`rounded-xl ${
+              {currentUser ? (
+                <MenuItem 
+                  icon={<LogoutIcon />} 
+                  onClick={handleLogout}
+                  style={{
+                    color: darkMode ? '#ef4444' : '#dc2626',
+                  }}
+                >
+                  Logout
+                </MenuItem>
+              ) : (
+                <MenuItem 
+                  icon={<LoginIcon />} 
+                  component={<Link to="/" />}
+                  onClick={() => setShowSidebar(false)} // Close mobile menu on navigation
+                >
+                  Login
+                </MenuItem>
+              )}
+
+              {/* Theme Toggle */}
+              <MenuItem
+                icon={darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+                onClick={() => setDarkMode(!darkMode)}
+                style={{
+                  backgroundColor: darkMode 
+                    ? 'rgba(245, 158, 11, 0.1)' 
+                    : 'rgba(245, 158, 11, 0.05)',
+                  color: darkMode ? '#fbbf24' : '#d97706',
+                }}
+              >
+                {darkMode ? 'Light Mode' : 'Dark Mode'}
+              </MenuItem>
+            </div>
+          </Menu>
+
+          {/* Footer Section */}
+          {!collapsed && (
+            <div className={`absolute bottom-4 left-4 right-4 p-3 rounded-lg ${
+              darkMode 
+                ? 'bg-gray-800/50 border border-gray-700' 
+                : 'bg-white/50 border border-gray-200'
+            } backdrop-blur-sm`}>
+              <p className={`text-xs text-center ${
+                darkMode ? 'text-gray-400' : 'text-gray-500'
+              }`}>
+                © 2025 Your App
+              </p>
+            </div>
+          )}
+        </Sidebar>
+      </div>
+
+      {/* Main Content with proper margin */}
+      <div 
+        className="flex-1 transition-all duration-300"
+        style={{ 
+          marginLeft: window.innerWidth >= 768 ? sidebarWidth : '0px' 
+        }}
+      >
+        <main className="min-h-screen p-4">
+          <div className={`min-h-screen p-6 ${
             darkMode 
-              ? 'bg-gray-800/20 border border-gray-700/30' 
-              : 'bg-white/40 border border-gray-200/30'
-          } backdrop-blur-sm shadow-lg p-6`}>
-            {children}
+              ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100' 
+              : 'bg-gradient-to-br from-white via-gray-50 to-gray-100 text-gray-900'
+          }`}>
+            {/* Children Content */}
+            <div className={`rounded-xl ${
+              darkMode 
+                ? 'bg-gray-800/20 border border-gray-700/30' 
+                : 'bg-white/40 border border-gray-200/30'
+            } backdrop-blur-sm shadow-lg p-6`}>
+              {children}
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 };

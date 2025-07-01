@@ -17,6 +17,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/tickets', ticketRoutes);
+app.use('/api/users', authRoutes);
 
 
 const PORT =process.env.PORT || 5050;
