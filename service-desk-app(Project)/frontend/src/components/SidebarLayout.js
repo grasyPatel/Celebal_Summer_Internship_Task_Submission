@@ -122,7 +122,7 @@ const SidebarLayout = ({ children }) => {
           <div className="md:hidden absolute top-4 right-4 z-10">
             <button
               onClick={() => setShowSidebar(false)}
-              className={`p-1 rounded ${darkMode ? 'text-black hover:text-white' : 'text-gray-600 hover:text-black'}`}
+              className={`p-1 rounded ${darkMode ? 'text-white hover:bg-white hover:text-black' : 'text-gray-600 hover:text-black'}`}
             >
               ✕
             </button>
@@ -170,7 +170,7 @@ const SidebarLayout = ({ children }) => {
               <MenuItem
                 icon={<DashboardIcon />}
                 component={<Link to="/dashboard" />}
-                onClick={() => setShowSidebar(false)} // Close mobile menu on navigation
+                onClick={() => setShowSidebar(false)} 
               >
                 Dashboard
               </MenuItem>
@@ -187,7 +187,7 @@ const SidebarLayout = ({ children }) => {
               <MenuItem
                 icon={<ReceiptLongIcon />}
                 component={<Link to="/tickets" />}
-                onClick={() => setShowSidebar(false)} // Close mobile menu on navigation
+                onClick={() => setShowSidebar(false)} 
               >
                 Tickets
               </MenuItem>
