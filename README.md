@@ -86,10 +86,26 @@ A powerful full-stack **Spotify Clone** built with the **MERN Stack**, featuring
 
 ---
 
+
+### 🎯 TASK:  Help Desk App — Full Stack Ticketing System (Over All Internship Project)
+
+A role-based Help Desk ticketing application with secure authentication, real-time updates, and intuitive dashboards for **users** and **admins**.
+## ✨ Features
+
+- 🔐 Firebase Google Authentication
+- 🧑‍💼 Role-based dashboards (User/Admin)
+- 📝 Create and manage tickets
+- 🎯 Admin assignment + ticket resolution
+- 💬 Real-time ticket updates
+- 💡 Responsive UI
+
+
 ## 📌 Upcoming Tasks
 
 This repository will be regularly updated with more assignments as I progress through the internship.  
 Stay tuned!
+
+
 
 
 
