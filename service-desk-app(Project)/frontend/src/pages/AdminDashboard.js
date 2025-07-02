@@ -225,7 +225,7 @@ const AdminDashboard = () => {
           </button>
         </div>
         
-        {/* Mobile Menu */}
+      
         {showMobileMenu && (
           <div className="border-t p-4 space-y-3">
             <div className="flex items-center justify-between text-sm">

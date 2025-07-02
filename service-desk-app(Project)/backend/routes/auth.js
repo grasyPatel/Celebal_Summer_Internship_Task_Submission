@@ -4,26 +4,29 @@ const router = express.Router();
 
 router.post("/user", async (req, res) => {
   const { uid, email, fullName, role } = req.body;
-    console.log("👉 Received in /user POST:", req.body);
+   
   try {
-    // Check if user already exists
+    
     let user = await User.findOne({ uid });
 
     if (!user) {
-      // If user doesn't exist, create a new one
+     
       user = new User({ uid, email, role:role ||'user'
         , fullName });
+      
       await user.save();
     } else {
-      // If user exists, update fullName or role if needed
+    
       user.fullName = fullName;
       if (role && user.role !== role) {
         user.role = role;
       }
+
+     
       await user.save();
     }
 
-    // Respond with user info
+   
     res.json({
       uid: user.uid,
       email: user.email,

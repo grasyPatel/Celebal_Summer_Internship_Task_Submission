@@ -35,11 +35,9 @@ const Login = () => {
       const adminEmail =
         process.env.REACT_APP_ADMIN_EMAIL?.trim().toLowerCase();
 
-      if (userEmail === adminEmail) {
-        navigate("/admin/dashboard");
-      } else {
-        navigate("/dashboard");
-      }
+      
+      navigate("/dashboard");
+      
     } catch (err) {
       setError("Invalid email or password. Please try again.");
     } finally {
