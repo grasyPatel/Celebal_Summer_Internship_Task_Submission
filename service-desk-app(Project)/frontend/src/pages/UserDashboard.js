@@ -94,7 +94,8 @@ const UserDashboard = () => {
   const stats = getTicketStats();
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen
+    ">
       <div className="max-w-7xl mx-auto p-6 space-y-8">
         {/* Header */}
         <div className="text-center">

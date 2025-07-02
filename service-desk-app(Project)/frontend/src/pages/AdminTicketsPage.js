@@ -185,7 +185,7 @@ const AdminTicketsPage = () => {
             disabled={loading}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
           >
-            🔄 Refresh
+             Refresh
           </button>
         </div>
 
@@ -223,7 +223,7 @@ const AdminTicketsPage = () => {
         </div>
 
         {/* Filters and Sorting */}
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+        <div className=" p-4 rounded-lg shadow">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -232,7 +232,7 @@ const AdminTicketsPage = () => {
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full border  text-gray-500  border-gray-300 dark:border-gray-600 rounded-md px-3 py-2"
               >
                 <option value="all">All Tickets</option>
                 <option value="open">Open</option>
@@ -250,7 +250,7 @@ const AdminTicketsPage = () => {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full border   text-gray-500 border-gray-300 dark:border-gray-600 rounded-md px-3 py-2"
               >
                 <option value="createdAt">Date Created</option>
                 <option value="priority">Priority</option>
@@ -260,13 +260,13 @@ const AdminTicketsPage = () => {
             </div>
             
             <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className=" block text-sm font-medium  text-gray-700 dark:text-gray-300  mb-2">
                 Order:
               </label>
               <select
                 value={sortOrder}
                 onChange={(e) => setSortOrder(e.target.value)}
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full border text-gray-500 border-gray-300 dark:border-gray-600 rounded-md px-3 py-2"
               >
                 <option value="desc">Newest First</option>
                 <option value="asc">Oldest First</option>

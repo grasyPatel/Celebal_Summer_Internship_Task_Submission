@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
-import { RefreshCw, Users, Ticket, Clock, CheckCircle, AlertCircle, TrendingUp, Calendar, Menu, X } from 'lucide-react';
+import { RefreshCw, Users, Ticket, Clock, CheckCircle, AlertCircle, TrendingUp, Calendar, Menu, X, Settings, FileText, UserPlus, BarChart3 } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 
@@ -21,6 +21,13 @@ const AdminDashboard = () => {
   const [recentTickets, setRecentTickets] = useState([]);
   const [lastUpdated, setLastUpdated] = useState(null);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  
+  // New states for Quick Actions
+  const [showUserManagement, setShowUserManagement] = useState(false);
+  const [showReports, setShowReports] = useState(false);
+  const [showSchedule, setShowSchedule] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
 
   const fetchDashboardData = async () => {
     try {
@@ -43,6 +50,7 @@ const AdminDashboard = () => {
         const usersRes = await axios.get(`${apiBase}/api/users`);
         console.log("Dashboard - Users:", usersRes.data);
         users = Array.isArray(usersRes.data) ? usersRes.data : usersRes.data.users || [];
+        setUsers(users); // Store users for Quick Actions
       } catch (userErr) {
         console.warn('Failed to fetch users:', userErr);
         // Continue without user data if endpoint doesn't exist
@@ -85,6 +93,76 @@ const AdminDashboard = () => {
     }
   };
 
+  // Quick Action Handlers
+  const handleManageUsers = () => {
+    setShowUserManagement(true);
+    setShowReports(false);
+    setShowSchedule(false);
+  };
+
+  const handleViewReports = () => {
+    setShowReports(true);
+    setShowUserManagement(false);
+    setShowSchedule(false);
+  };
+
+  const handleSchedule = () => {
+    setShowSchedule(true);
+    setShowUserManagement(false);
+    setShowReports(false);
+  };
+
+  const handleUserRoleChange = async (userId, newRole) => {
+    try {
+      setLoadingUsers(true);
+      const apiBase = process.env.REACT_APP_API_BASE;
+      await axios.put(`${apiBase}/api/users/${userId}`, { role: newRole });
+      
+      // Refresh user data
+      const usersRes = await axios.get(`${apiBase}/api/users`);
+      const updatedUsers = Array.isArray(usersRes.data) ? usersRes.data : usersRes.data.users || [];
+      setUsers(updatedUsers);
+      
+      // Refresh dashboard stats
+      fetchDashboardData();
+    } catch (err) {
+      console.error('Failed to update user role:', err);
+      setError('Failed to update user role');
+    } finally {
+      setLoadingUsers(false);
+    }
+  };
+
+  const generateReport = () => {
+    const reportData = {
+      timestamp: new Date().toISOString(),
+      totalTickets: stats.totalTickets,
+      openTickets: stats.open,
+      inProgressTickets: stats.inProgress,
+      resolvedTickets: stats.resolved,
+      totalUsers: stats.users,
+      totalAdmins: stats.admins,
+      recentTickets: recentTickets.map(ticket => ({
+        id: ticket.id || ticket._id,
+        title: ticket.title || ticket.subject,
+        status: ticket.status,
+        priority: ticket.priority,
+        creator: ticket.creatorInfo?.email,
+        createdAt: ticket.createdAt
+      }))
+    };
+
+    const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `dashboard-report-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   useEffect(() => {
     fetchDashboardData();
     const interval = setInterval(fetchDashboardData, 5 * 60 * 1000);
@@ -124,7 +202,7 @@ const AdminDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen  flex items-center justify-center p-4">
+      <div className="min-h-screen flex items-center justify-center p-4">
         <div className="flex items-center space-x-2">
           <RefreshCw className="h-6 w-6 animate-spin text-blue-500" />
           <span className="text-lg">Loading dashboard data...</span>
@@ -134,9 +212,9 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen">
       {/* Mobile Header */}
-      <div className="lg:hidden shadow-sm border-b sticky top-0 z-10">
+      <div className="lg:hidden shadow-sm border-b sticky bg-gray-200 top-0 z-10">
         <div className="flex items-center justify-between p-4">
           <h1 className="text-xl font-bold">Dashboard</h1>
           <button
@@ -151,8 +229,8 @@ const AdminDashboard = () => {
         {showMobileMenu && (
           <div className="border-t p-4 space-y-3">
             <div className="flex items-center justify-between text-sm">
-              <span className="">Last updated:</span>
-              <span className="">
+              <span>Last updated:</span>
+              <span>
                 {lastUpdated ? lastUpdated.toLocaleTimeString() : 'Never'}
               </span>
             </div>
@@ -165,7 +243,6 @@ const AdminDashboard = () => {
                 <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
                 Refresh
               </button>
-             
             </div>
           </div>
         )}
@@ -210,8 +287,7 @@ const AdminDashboard = () => {
         )}
 
         {/* Stats Cards - Responsive Grid */}
-       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
-
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
           <DashboardCard 
             title="Total Tickets" 
             count={stats.totalTickets} 
@@ -259,7 +335,7 @@ const AdminDashboard = () => {
         {/* Charts Section - Responsive */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-6">
           {/* Bar Chart */}
-          <div className="bg-tansparent p-4 lg:p-6 rounded-xl shadow-sm border">
+          <div className="bg-transparent p-4 lg:p-6 rounded-xl shadow-sm border">
             <h3 className="text-lg font-semibold mb-4">Ticket Status Overview</h3>
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={chartData}>
@@ -301,10 +377,10 @@ const AdminDashboard = () => {
         </div>
 
         {/* Recent Tickets Table - Mobile Responsive */}
-        <div className=" rounded-xl shadow-sm border">
+        <div className="rounded-xl shadow-sm border">
           <div className="p-4 lg:p-6 border-b border-gray-200">
-            <h3 className="text-3xl font-semibold ">Recent Tickets</h3>
-            <p className=" text-sm">Latest support tickets and their status</p>
+            <h3 className="text-3xl font-semibold">Recent Tickets</h3>
+            <p className="text-sm">Latest support tickets and their status</p>
           </div>
           
           {/* Mobile Card View */}
@@ -315,7 +391,7 @@ const AdminDashboard = () => {
                   <div key={ticket.id || ticket._id} className="p-4 space-y-3">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <h4 className="font-medium  text-sm">
+                        <h4 className="font-medium text-sm">
                           {ticket.title || ticket.subject || 'No Title'}
                         </h4>
                         <p className="text-xs text-gray-500 mt-1">
@@ -339,7 +415,7 @@ const AdminDashboard = () => {
                 ))}
               </div>
             ) : (
-              <div className="p-8 text-center ">
+              <div className="p-8 text-center">
                 {loading ? 'Loading tickets...' : 'No tickets found'}
               </div>
             )}
@@ -350,26 +426,26 @@ const AdminDashboard = () => {
             <table className="w-full">
               <thead className="divide-x divide-gray-200">
                 <tr className="divide-gray-200">
-                  <th className="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider">ID</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider">Title</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider">User</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">ID</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Title</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">User</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Status</th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Priority</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider">Created</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Created</th>
                 </tr>
               </thead>
-              <tbody className=" divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200">
                 {recentTickets && recentTickets.length > 0 ? (
                   recentTickets.map((ticket) => (
-                    <tr key={ticket.id || ticket._id} className="hover:bg-gray-400">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium   ">
+                    <tr key={ticket.id || ticket._id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         #{ticket.id || ticket._id || 'N/A'}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm ">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
                         {ticket.title || ticket.subject || 'No Title'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        { ticket.creatorInfo?.email || 'Unknown'}
+                        {ticket.creatorInfo?.email || 'Unknown'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(ticket.status)}`}>
@@ -381,7 +457,7 @@ const AdminDashboard = () => {
                           {ticket.priority || 'Medium'}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm ">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
                         {ticket.createdAt ? new Date(ticket.createdAt).toLocaleDateString() : 'N/A'}
                       </td>
                     </tr>
@@ -398,25 +474,142 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Quick Actions - Responsive Grid */}
-        <div className=" p-4 lg:p-6 rounded-xl shadow-sm border">
-          <h3 className="text-3xl font-semibold  mb-4">Quick Actions</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4 w-full">
-           
-            <button className="p-3 lg:p-4 border border-gray-200 rounded-lg hover:bg-gray-400 transition-colors">
-              <Users className="h-5 w-5 lg:h-6 lg:w-6 text-green-500 mx-auto mb-2" />
-              <span className="text-xs lg:text-sm font-medium">Manage Users</span>
+        {/* Quick Actions - Enhanced with Working Functionality */}
+        <div className="p-4 lg:p-6 rounded-xl shadow-sm border">
+          <h3 className="text-3xl font-semibold mb-4">Quick Actions</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-3 lg:gap-4 w-full">
+            <button 
+              onClick={handleManageUsers}
+              className="p-3 lg:p-4 border  hover:text-black border-gray-200 rounded-lg hover:bg-gray-50 hover:border-green-300 transition-all duration-200 group"
+            >
+              <Users className="h-5 w-5 lg:h-6 lg:w-6 text-green-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
+              <span className="text-xs lg:text-sm  font-medium">Manage Users</span>
             </button>
-            <button className="p-3 lg:p-4 border border-gray-200 rounded-lg hover:bg-gray-400 transition-colors">
-              <TrendingUp className="h-5 w-5 lg:h-6 lg:w-6 text-purple-500 mx-auto mb-2" />
-              <span className="text-xs lg:text-sm font-medium">View Reports</span>
+            <button 
+              onClick={handleViewReports}
+              className="p-3 lg:p-4 border  hover:text-black border-gray-200 rounded-lg hover:bg-gray-50 hover:border-purple-300 transition-all duration-200 group"
+            >
+              <BarChart3 className="h-5 w-5 lg:h-6 lg:w-6 text-purple-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
+              <span className="text-xs lg:text-sm   font-medium">View Reports</span>
             </button>
-            <button className="p-3 lg:p-4 border border-gray-200 rounded-lg hover:bg-gray-400 transition-colors">
-              <Calendar className="h-5 w-5 lg:h-6 lg:w-6 text-orange-500 mx-auto mb-2" />
-              <span className="text-xs lg:text-sm font-medium">Schedule</span>
-            </button>
-          </div>
+            
+          </div> 
         </div>
+
+        {/* User Management Modal */}
+        {showUserManagement && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-green-100 rounded-xl p-6 max-w-4xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl text-black font-bold">User Management</h2>
+                <button
+                  onClick={() => setShowUserManagement(false)}
+                  className="p-2  border-gray-500 hover:bg-gray-500 rounded-lg"
+                >
+                  <X className="h-5 w-5 text-black " />
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                {users.length > 0 ? (
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse border border-black">
+                      <thead>
+                        <tr className="bg-gray-400">
+                          <th className="border text-black border-black px-4 py-2 text-left">Email</th>
+                          <th className="border text-black border-black px-4 py-2 text-left">Role</th>
+                          <th className="border text-black border-black px-4 py-2 text-left">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {users.map((user) => (
+                          <tr key={user.id || user._id} className="hover:bg-gray-50">
+                            <td className="border text-black border-black px-4 py-2">{user.email}</td>
+                            <td className="border text-black border-black px-4 py-2">
+                              <span className={`px-2 py-1 rounded-full text-xs ${
+                                ['admin', 'Admin', 'administrator'].includes(user.role) 
+                                  ? 'bg-purple-100 text-purple-800' 
+                                  : 'bg-blue-100 text-blue-800'
+                              }`}>
+                                {user.role || 'User'}
+                              </span>
+                            </td>
+                            <td className="border text-black border-black px-4 py-2">
+                              <select
+                                value={user.role || 'user'}
+                                onChange={(e) => handleUserRoleChange(user.id || user._id, e.target.value)}
+                                className="bg-blue-400 text-whitepx-2 py-1 border-none rounded text-sm"
+                                disabled={loadingUsers}
+                              >
+                                <option  value="user">User</option>
+                                <option value="admin">Admin</option>
+                              </select>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <p className="text-center text-gray-500">No users found</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Reports Modal */}
+        {showReports && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-green-100 rounded-xl p-6 max-w-2xl w-full mx-4">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl text-black font-bold">System Reports</h2>
+                <button
+                  onClick={() => setShowReports(false)}
+                  className="p-2 hover:bg-gray-500 rounded-lg"
+                >
+                  <X className="h-5 w-5 text-black" />
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <h3 className="font-semibold text-blue-800">Ticket Summary</h3>
+                    <p className="text-sm text-blue-600 mt-1">
+                      Total: {stats.totalTickets} | Open: {stats.open} | Resolved: {stats.resolved}
+                    </p>
+                  </div>
+                  <div className="bg-green-50 p-4 rounded-lg">
+                    <h3 className="font-semibold text-green-800">User Statistics</h3>
+                    <p className="text-sm text-green-600 mt-1">
+                      Users: {stats.users} | Admins: {stats.admins}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h3 className="font-semibold text-black mb-2">Recent Activity</h3>
+                  <ul className="text-sm space-y-1 text-black">
+                    <li>• {stats.resolved} tickets resolved this period</li>
+                    <li>• {stats.open} tickets currently open</li>
+                    <li>• {stats.inProgress} tickets in progress</li>
+                  </ul>
+                </div>
+                
+                <button
+                  onClick={generateReport}
+                  className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                >
+                  <FileText className="h-4 w-4" />
+                  Download Full Report
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+       
       </div>
     </div>
   );

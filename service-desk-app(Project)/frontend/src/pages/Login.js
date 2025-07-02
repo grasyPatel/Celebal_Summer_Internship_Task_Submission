@@ -1,30 +1,77 @@
-import { useState } from 'react';
-import { auth } from '../services/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Mail, Lock, LogIn, ArrowRight, AlertCircle } from 'lucide-react';
+import { useState } from "react";
+import { auth, googleProvider } from "../services/firebase";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Eye,
+  EyeOff,
+  Mail,
+  Lock,
+  LogIn,
+  ArrowRight,
+  AlertCircle,
+} from "lucide-react";
+import axios from "axios";
+
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [focusedField, setFocusedField] = useState('');
+  const [focusedField, setFocusedField] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
-    
+    setError("");
+
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/dashboard');
+
+      const userEmail = email.trim().toLowerCase();
+      const adminEmail =
+        process.env.REACT_APP_ADMIN_EMAIL?.trim().toLowerCase();
+
+      if (userEmail === adminEmail) {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (err) {
-      setError('Invalid email or password. Please try again.');
+      setError("Invalid email or password. Please try again.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+
+      const userData = {
+        uid: user.uid,
+        email: user.email,
+        fullName: user.displayName,
+        role:
+          user.email === process.env.REACT_APP_ADMIN_EMAIL ? "admin" : "user",
+      };
+
+      // Send to your backend
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE}/api/auth/user`,
+        userData,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Google Sign-In Error:", error);
     }
   };
 
@@ -33,13 +80,15 @@ const Login = () => {
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-pink-400 to-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div
+          className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-pink-400 to-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"
+          style={{ animationDelay: "2s" }}
+        ></div>
       </div>
 
       <div className="relative w-full max-w-md">
         {/* Login Card */}
         <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border border-white/20 dark:border-gray-700/50 rounded-2xl shadow-2xl p-8 transform transition-all duration-500 hover:scale-[1.02] hover:shadow-3xl">
-          
           {/* Header */}
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg transform rotate-3 hover:rotate-0 transition-transform duration-300">
@@ -57,7 +106,9 @@ const Login = () => {
           {error && (
             <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl flex items-center space-x-3 animate-shake">
               <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-              <p className="text-red-700 dark:text-red-300 text-sm font-medium">{error}</p>
+              <p className="text-red-700 dark:text-red-300 text-sm font-medium">
+                {error}
+              </p>
             </div>
           )}
 
@@ -69,18 +120,20 @@ const Login = () => {
                 Email Address
               </label>
               <div className="relative">
-                <Mail className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-200 ${
-                  focusedField === 'email' || email 
-                    ? 'text-indigo-500' 
-                    : 'text-gray-400'
-                }`} />
+                <Mail
+                  className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-200 ${
+                    focusedField === "email" || email
+                      ? "text-indigo-500"
+                      : "text-gray-400"
+                  }`}
+                />
                 <input
                   type="email"
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  onFocus={() => setFocusedField('email')}
-                  onBlur={() => setFocusedField('')}
+                  onFocus={() => setFocusedField("email")}
+                  onBlur={() => setFocusedField("")}
                   className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-400 transition-all duration-200 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   required
                 />
@@ -93,18 +146,20 @@ const Login = () => {
                 Password
               </label>
               <div className="relative">
-                <Lock className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-200 ${
-                  focusedField === 'password' || password 
-                    ? 'text-indigo-500' 
-                    : 'text-gray-400'
-                }`} />
+                <Lock
+                  className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-200 ${
+                    focusedField === "password" || password
+                      ? "text-indigo-500"
+                      : "text-gray-400"
+                  }`}
+                />
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  onFocus={() => setFocusedField('password')}
-                  onBlur={() => setFocusedField('')}
+                  onFocus={() => setFocusedField("password")}
+                  onBlur={() => setFocusedField("")}
                   className="w-full pl-12 pr-12 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-400 transition-all duration-200 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   required
                 />
@@ -113,7 +168,11 @@ const Login = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-indigo-500 transition-colors duration-200"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
             </div>
@@ -169,15 +228,26 @@ const Login = () => {
             </div>
 
             {/* Social Login Buttons */}
-            
+
+            <button
+              onClick={handleGoogleSignIn}
+              className="bg-white text-gray-800 px-4 py-2 rounded shadow hover:shadow-md flex items-center justify-center space-x-2 border w-full"
+            >
+              <img
+                src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                alt="Google"
+                className="w-5 h-5"
+              />
+              <span>Sign in with Google</span>
+            </button>
           </form>
 
           {/* Sign Up Link */}
           <div className="mt-8 text-center">
             <p className="text-gray-600 dark:text-gray-300 text-sm">
-              Don't have an account?{' '}
-              <Link 
-                to="/signup" 
+              Don't have an account?{" "}
+              <Link
+                to="/signup"
                 className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors hover:underline"
               >
                 Create one now →
@@ -187,9 +257,7 @@ const Login = () => {
         </div>
 
         {/* Footer */}
-        <div className="mt-8 text-center">
-         
-        </div>
+        <div className="mt-8 text-center"></div>
       </div>
     </div>
   );

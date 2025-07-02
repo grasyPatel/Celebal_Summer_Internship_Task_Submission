@@ -284,7 +284,7 @@ const TicketsPage = () => {
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                       placeholder="Brief description of your issue"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      className="w-full px-4 py-3 text-black border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                       required
                     />
                   </div>
@@ -327,7 +327,7 @@ const TicketsPage = () => {
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
                       placeholder="Please provide detailed information about your issue..."
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
+                      className="w-full px-4 py-3 border  text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
                       rows={4}
                     />
                   </div>
@@ -642,9 +642,7 @@ const TicketsPage = () => {
                       </div>
                       
                       <div className="flex items-center space-x-2">
-                        <button className="text-blue-600 hover:text-blue-800 font-medium">
-                          View Details
-                        </button>
+                        
                         {role === 'admin' && (
                           <button className="text-green-600 hover:text-green-800 font-medium">
                             Update Status

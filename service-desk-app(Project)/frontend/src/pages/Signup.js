@@ -1,31 +1,46 @@
-import { useState } from 'react';
-import { auth } from '../services/firebase';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Mail, Lock, User, UserPlus, ArrowRight, AlertCircle, Check, X } from 'lucide-react';
-import axios from 'axios'; 
+import { useState } from "react";
+import { auth, googleProvider } from "../services/firebase";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  signInWithPopup,
+} from "firebase/auth";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Eye,
+  EyeOff,
+  Mail,
+  Lock,
+  User,
+  UserPlus,
+  ArrowRight,
+  AlertCircle,
+  Check,
+  X,
+} from "lucide-react";
+import axios from "axios";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [focusedField, setFocusedField] = useState('');
+  const [focusedField, setFocusedField] = useState("");
   const [passwordStrength, setPasswordStrength] = useState(0);
   const navigate = useNavigate();
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    
+    setFormData((prev) => ({ ...prev, [field]: value }));
+
     // Calculate password strength
-    if (field === 'password') {
+    if (field === "password") {
       const strength = calculatePasswordStrength(value);
       setPasswordStrength(strength);
     }
@@ -42,26 +57,28 @@ const Signup = () => {
   };
 
   const getPasswordStrengthColor = () => {
-    if (passwordStrength < 50) return 'bg-red-500';
-    if (passwordStrength < 75) return 'bg-yellow-500';
-    return 'bg-green-500';
+    if (passwordStrength < 50) return "bg-red-500";
+    if (passwordStrength < 75) return "bg-yellow-500";
+    return "bg-green-500";
   };
 
   const getPasswordStrengthText = () => {
-    if (passwordStrength < 25) return 'Very Weak';
-    if (passwordStrength < 50) return 'Weak';
-    if (passwordStrength < 75) return 'Good';
-    if (passwordStrength < 100) return 'Strong';
-    return 'Very Strong';
+    if (passwordStrength < 25) return "Very Weak";
+    if (passwordStrength < 50) return "Weak";
+    if (passwordStrength < 75) return "Good";
+    if (passwordStrength < 100) return "Strong";
+    return "Very Strong";
   };
 
   const validateForm = () => {
-    if (!formData.firstName.trim()) return 'First name is required';
-    if (!formData.lastName.trim()) return 'Last name is required';
-    if (!formData.email.trim()) return 'Email is required';
-    if (!formData.password) return 'Password is required';
-    if (formData.password.length < 6) return 'Password must be at least 6 characters';
-    if (formData.password !== formData.confirmPassword) return 'Passwords do not match';
+    if (!formData.firstName.trim()) return "First name is required";
+    if (!formData.lastName.trim()) return "Last name is required";
+    if (!formData.email.trim()) return "Email is required";
+    if (!formData.password) return "Password is required";
+    if (formData.password.length < 6)
+      return "Password must be at least 6 characters";
+    if (formData.password !== formData.confirmPassword)
+      return "Passwords do not match";
     return null;
   };
 
@@ -75,13 +92,13 @@ const Signup = () => {
     }
 
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
       // Create user with Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(
-        auth, 
-        formData.email, 
+        auth,
+        formData.email,
         formData.password
       );
 
@@ -94,51 +111,91 @@ const Signup = () => {
       });
 
       // Prepare user data for backend
+      const isAdminEmail =
+        formData.email.trim() === process.env.REACT_APP_ADMIN_EMAIL;
+
       const userData = {
         uid: userCredential.user.uid,
         email: formData.email.trim(),
         fullName: fullName,
-        role: 'user',
+        role: isAdminEmail ? "admin" : "user",
       };
 
-      console.log('Sending to backend:', userData);
+      console.log("Sending to backend:", userData);
 
       // Send to backend
-      const response = await axios.post(`${process.env.REACT_APP_API_BASE}/api/auth/user`, userData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE}/api/auth/user`,
+        userData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      console.log('Backend response:', response.data);
-      navigate('/dashboard');
-      
+      console.log("Backend response:", response.data);
+      navigate("/dashboard");
     } catch (err) {
-      console.error('Signup error:', err);
-      
+      console.error("Signup error:", err);
+
       // Handle different types of errors
       if (err.response) {
         // Backend error
-        console.error('Backend error:', err.response.data);
-        setError(err.response.data.message || 'Failed to create account');
+        console.error("Backend error:", err.response.data);
+        setError(err.response.data.message || "Failed to create account");
       } else if (err.code) {
         // Firebase error
-        setError(err.message.replace('Firebase: ', ''));
+        setError(err.message.replace("Firebase: ", ""));
       } else {
         // Network or other error
-        setError('Network error. Please try again.');
+        setError("Network error. Please try again.");
       }
     } finally {
       setLoading(false);
     }
   };
 
+  const handleGoogleSignup = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+
+      const userData = {
+        uid: user.uid,
+        email: user.email,
+        fullName: user.displayName,
+        role:
+          user.email === process.env.REACT_APP_ADMIN_EMAIL ? "admin" : "user",
+      };
+    console.log("Sending to backend:", userData);
+
+      // Send to your backend )
+
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE}/api/auth/user`,
+        userData,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Google Sign-Up Error:", error);
+      setError("Failed to sign up with Google. Please try again.");
+    }
+  };
+
   const passwordRequirements = [
-    { text: 'At least 8 characters', met: formData.password.length >= 8 },
-    { text: 'One lowercase letter', met: /[a-z]/.test(formData.password) },
-    { text: 'One uppercase letter', met: /[A-Z]/.test(formData.password) },
-    { text: 'One number', met: /[0-9]/.test(formData.password) },
-    { text: 'One special character', met: /[^A-Za-z0-9]/.test(formData.password) }
+    { text: "At least 8 characters", met: formData.password.length >= 8 },
+    { text: "One lowercase letter", met: /[a-z]/.test(formData.password) },
+    { text: "One uppercase letter", met: /[A-Z]/.test(formData.password) },
+    { text: "One number", met: /[0-9]/.test(formData.password) },
+    {
+      text: "One special character",
+      met: /[^A-Za-z0-9]/.test(formData.password),
+    },
   ];
 
   return (
@@ -146,14 +203,19 @@ const Signup = () => {
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-purple-400 to-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-pink-400 to-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse" style={{ animationDelay: '4s' }}></div>
+        <div
+          className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"
+          style={{ animationDelay: "2s" }}
+        ></div>
+        <div
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-pink-400 to-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse"
+          style={{ animationDelay: "4s" }}
+        ></div>
       </div>
 
       <div className="relative w-full max-w-lg">
         {/* Signup Card */}
         <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border border-white/20 dark:border-gray-700/50 rounded-2xl shadow-2xl p-8 transform transition-all duration-500 hover:scale-[1.01] hover:shadow-3xl">
-          
           {/* Header */}
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg transform -rotate-3 hover:rotate-0 transition-transform duration-300">
@@ -171,7 +233,9 @@ const Signup = () => {
           {error && (
             <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl flex items-center space-x-3 animate-shake">
               <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-              <p className="text-red-700 dark:text-red-300 text-sm font-medium">{error}</p>
+              <p className="text-red-700 dark:text-red-300 text-sm font-medium">
+                {error}
+              </p>
             </div>
           )}
 
@@ -184,18 +248,22 @@ const Signup = () => {
                   First Name
                 </label>
                 <div className="relative">
-                  <User className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-200 ${
-                    focusedField === 'firstName' || formData.firstName 
-                      ? 'text-purple-500' 
-                      : 'text-gray-400'
-                  }`} />
+                  <User
+                    className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-200 ${
+                      focusedField === "firstName" || formData.firstName
+                        ? "text-purple-500"
+                        : "text-gray-400"
+                    }`}
+                  />
                   <input
                     type="text"
                     placeholder="John"
                     value={formData.firstName}
-                    onChange={(e) => handleInputChange('firstName', e.target.value)}
-                    onFocus={() => setFocusedField('firstName')}
-                    onBlur={() => setFocusedField('')}
+                    onChange={(e) =>
+                      handleInputChange("firstName", e.target.value)
+                    }
+                    onFocus={() => setFocusedField("firstName")}
+                    onBlur={() => setFocusedField("")}
                     className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:focus:ring-purple-400 transition-all duration-200 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                     required
                   />
@@ -207,18 +275,22 @@ const Signup = () => {
                   Last Name
                 </label>
                 <div className="relative">
-                  <User className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-200 ${
-                    focusedField === 'lastName' || formData.lastName 
-                      ? 'text-purple-500' 
-                      : 'text-gray-400'
-                  }`} />
+                  <User
+                    className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-200 ${
+                      focusedField === "lastName" || formData.lastName
+                        ? "text-purple-500"
+                        : "text-gray-400"
+                    }`}
+                  />
                   <input
                     type="text"
                     placeholder="Doe"
                     value={formData.lastName}
-                    onChange={(e) => handleInputChange('lastName', e.target.value)}
-                    onFocus={() => setFocusedField('lastName')}
-                    onBlur={() => setFocusedField('')}
+                    onChange={(e) =>
+                      handleInputChange("lastName", e.target.value)
+                    }
+                    onFocus={() => setFocusedField("lastName")}
+                    onBlur={() => setFocusedField("")}
                     className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:focus:ring-purple-400 transition-all duration-200 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                     required
                   />
@@ -232,18 +304,20 @@ const Signup = () => {
                 Email Address
               </label>
               <div className="relative">
-                <Mail className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-200 ${
-                  focusedField === 'email' || formData.email 
-                    ? 'text-purple-500' 
-                    : 'text-gray-400'
-                }`} />
+                <Mail
+                  className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-200 ${
+                    focusedField === "email" || formData.email
+                      ? "text-purple-500"
+                      : "text-gray-400"
+                  }`}
+                />
                 <input
                   type="email"
                   placeholder="john.doe@example.com"
                   value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                  onFocus={() => setFocusedField('email')}
-                  onBlur={() => setFocusedField('')}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
+                  onFocus={() => setFocusedField("email")}
+                  onBlur={() => setFocusedField("")}
                   className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:focus:ring-purple-400 transition-all duration-200 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   required
                 />
@@ -256,18 +330,22 @@ const Signup = () => {
                 Password
               </label>
               <div className="relative">
-                <Lock className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-200 ${
-                  focusedField === 'password' || formData.password 
-                    ? 'text-purple-500' 
-                    : 'text-gray-400'
-                }`} />
+                <Lock
+                  className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-200 ${
+                    focusedField === "password" || formData.password
+                      ? "text-purple-500"
+                      : "text-gray-400"
+                  }`}
+                />
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   placeholder="Create a strong password"
                   value={formData.password}
-                  onChange={(e) => handleInputChange('password', e.target.value)}
-                  onFocus={() => setFocusedField('password')}
-                  onBlur={() => setFocusedField('')}
+                  onChange={(e) =>
+                    handleInputChange("password", e.target.value)
+                  }
+                  onFocus={() => setFocusedField("password")}
+                  onBlur={() => setFocusedField("")}
                   className="w-full pl-12 pr-12 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:focus:ring-purple-400 transition-all duration-200 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   required
                 />
@@ -276,7 +354,11 @@ const Signup = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-purple-500 transition-colors duration-200"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
 
@@ -284,11 +366,18 @@ const Signup = () => {
               {formData.password && (
                 <div className="mt-3 space-y-2">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-gray-600 dark:text-gray-400">Password Strength</span>
-                    <span className={`font-semibold ${
-                      passwordStrength < 50 ? 'text-red-500' : 
-                      passwordStrength < 75 ? 'text-yellow-500' : 'text-green-500'
-                    }`}>
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Password Strength
+                    </span>
+                    <span
+                      className={`font-semibold ${
+                        passwordStrength < 50
+                          ? "text-red-500"
+                          : passwordStrength < 75
+                          ? "text-yellow-500"
+                          : "text-green-500"
+                      }`}
+                    >
                       {getPasswordStrengthText()}
                     </span>
                   </div>
@@ -308,18 +397,23 @@ const Signup = () => {
                 Confirm Password
               </label>
               <div className="relative">
-                <Lock className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-200 ${
-                  focusedField === 'confirmPassword' || formData.confirmPassword 
-                    ? 'text-purple-500' 
-                    : 'text-gray-400'
-                }`} />
+                <Lock
+                  className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-200 ${
+                    focusedField === "confirmPassword" ||
+                    formData.confirmPassword
+                      ? "text-purple-500"
+                      : "text-gray-400"
+                  }`}
+                />
                 <input
-                  type={showConfirmPassword ? 'text' : 'password'}
+                  type={showConfirmPassword ? "text" : "password"}
                   placeholder="Confirm your password"
                   value={formData.confirmPassword}
-                  onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                  onFocus={() => setFocusedField('confirmPassword')}
-                  onBlur={() => setFocusedField('')}
+                  onChange={(e) =>
+                    handleInputChange("confirmPassword", e.target.value)
+                  }
+                  onFocus={() => setFocusedField("confirmPassword")}
+                  onBlur={() => setFocusedField("")}
                   className="w-full pl-12 pr-12 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:focus:ring-purple-400 transition-all duration-200 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   required
                 />
@@ -328,22 +422,30 @@ const Signup = () => {
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-purple-500 transition-colors duration-200"
                 >
-                  {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showConfirmPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
-              
+
               {/* Password Match Indicator */}
               {formData.confirmPassword && (
                 <div className="mt-2 flex items-center space-x-2 text-sm">
                   {formData.password === formData.confirmPassword ? (
                     <>
                       <Check className="w-4 h-4 text-green-500" />
-                      <span className="text-green-600 dark:text-green-400">Passwords match</span>
+                      <span className="text-green-600 dark:text-green-400">
+                        Passwords match
+                      </span>
                     </>
                   ) : (
                     <>
                       <X className="w-4 h-4 text-red-500" />
-                      <span className="text-red-600 dark:text-red-400">Passwords don't match</span>
+                      <span className="text-red-600 dark:text-red-400">
+                        Passwords don't match
+                      </span>
                     </>
                   )}
                 </div>
@@ -358,13 +460,22 @@ const Signup = () => {
                 </h4>
                 <div className="grid grid-cols-1 gap-2">
                   {passwordRequirements.map((req, index) => (
-                    <div key={index} className="flex items-center space-x-2 text-xs">
+                    <div
+                      key={index}
+                      className="flex items-center space-x-2 text-xs"
+                    >
                       {req.met ? (
                         <Check className="w-3 h-3 text-green-500" />
                       ) : (
                         <X className="w-3 h-3 text-red-500" />
                       )}
-                      <span className={req.met ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
+                      <span
+                        className={
+                          req.met
+                            ? "text-green-600 dark:text-green-400"
+                            : "text-red-600 dark:text-red-400"
+                        }
+                      >
                         {req.text}
                       </span>
                     </div>
@@ -391,14 +502,38 @@ const Signup = () => {
                 </>
               )}
             </button>
+
+            <div className="mt-6">
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+                    or continue with
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={handleGoogleSignup}
+                className="w-full bg-white border border-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-xl shadow flex items-center justify-center space-x-3 hover:bg-gray-100 transition"
+              >
+                <img
+                  src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                  alt="Google logo"
+                  className="w-5 h-5"
+                />
+                <span>Sign up with Google</span>
+              </button>
+            </div>
           </form>
 
           {/* Login Link */}
           <div className="mt-8 text-center">
             <p className="text-gray-600 dark:text-gray-300 text-sm">
-              Already have an account?{' '}
-              <Link 
-                to="/" 
+              Already have an account?{" "}
+              <Link
+                to="/"
                 className="font-semibold text-purple-600 hover:text-purple-500 dark:text-purple-400 dark:hover:text-purple-300 transition-colors hover:underline"
               >
                 Sign in instead →
@@ -408,9 +543,7 @@ const Signup = () => {
         </div>
 
         {/* Footer */}
-        <div className="mt-4 text-center">
-         
-        </div>
+        <div className="mt-4 text-center"></div>
       </div>
     </div>
   );

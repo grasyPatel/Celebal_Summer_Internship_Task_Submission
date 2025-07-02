@@ -84,7 +84,6 @@ const SidebarLayout = ({ children }) => {
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-      {/* Mobile menu toggle button */}
       {!showSidebar && (
         <button
           className="md:hidden fixed top-4 left-4 z-50 p-2 bg-white dark:bg-gray-800 border rounded-lg shadow-lg"
@@ -94,7 +93,6 @@ const SidebarLayout = ({ children }) => {
         </button>
       )}
 
-      {/* Mobile overlay */}
       {showSidebar && (
         <div 
           className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
@@ -102,7 +100,6 @@ const SidebarLayout = ({ children }) => {
         />
       )}
 
-      {/* Fixed Sidebar */}
       <div 
         className={`fixed top-0 left-0 h-full z-40 transition-transform duration-300 ${
           showSidebar ? 'translate-x-0' : '-translate-x-full'
@@ -122,17 +119,15 @@ const SidebarLayout = ({ children }) => {
           }}
           transitionDuration={300}
         >
-          {/* Close button for mobile */}
           <div className="md:hidden absolute top-4 right-4 z-10">
             <button
               onClick={() => setShowSidebar(false)}
-              className={`p-1 rounded ${darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-black'}`}
+              className={`p-1 rounded ${darkMode ? 'text-black hover:text-white' : 'text-gray-600 hover:text-black'}`}
             >
               ✕
             </button>
           </div>
 
-          {/* Header Section */}
           <div className={`p-4 border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'} mb-4`}>
             {!collapsed && (
               <div className="flex items-center space-x-3">
@@ -218,7 +213,6 @@ const SidebarLayout = ({ children }) => {
                 </MenuItem>
               )}
 
-              {/* Theme Toggle */}
               <MenuItem
                 icon={darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
                 onClick={() => setDarkMode(!darkMode)}
@@ -234,7 +228,6 @@ const SidebarLayout = ({ children }) => {
             </div>
           </Menu>
 
-          {/* Footer Section */}
           {!collapsed && (
             <div className={`absolute bottom-4 left-4 right-4 p-3 rounded-lg ${
               darkMode 
@@ -244,14 +237,13 @@ const SidebarLayout = ({ children }) => {
               <p className={`text-xs text-center ${
                 darkMode ? 'text-gray-400' : 'text-gray-500'
               }`}>
-                © 2025 Your App
+                © 2025 Service Desk
               </p>
             </div>
           )}
         </Sidebar>
       </div>
 
-      {/* Main Content with proper margin */}
       <div 
         className="flex-1 transition-all duration-300"
         style={{ 
@@ -264,7 +256,6 @@ const SidebarLayout = ({ children }) => {
               ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100' 
               : 'bg-gradient-to-br from-white via-gray-50 to-gray-100 text-gray-900'
           }`}>
-            {/* Children Content */}
             <div className={`rounded-xl ${
               darkMode 
                 ? 'bg-gray-800/20 border border-gray-700/30' 
