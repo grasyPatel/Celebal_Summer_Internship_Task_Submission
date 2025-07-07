@@ -83,9 +83,9 @@ A powerful full-stack **Spotify Clone** built with the **MERN Stack**, featuring
 - Authentication via Clerk.dev
 - Responsive and intuitive UI with material Ui ,Lucid-react, Tailwind Css
 
-# 🛍️ Task 7 & 8  BlinkMart - Advanced E-commerce Store
+# 🛍️ Task 7 & 8  ShopNow - Advanced E-commerce Store
 
-Welcome to **BlinkMart**, a feature-rich, responsive E-commerce platform inspired by Blinkit. This web app allows users to browse products, customize the view, manage their cart, checkout seamlessly, and make secure payments — all in a smooth and user-friendly interface.
+Welcome to **Shopnow**, a feature-rich, responsive E-commerce platform inspired by Blinkit. This web app allows users to browse products, customize the view, manage their cart, checkout seamlessly, and make secure payments — all in a smooth and user-friendly interface.
 
 ## 🔥 Features
 
