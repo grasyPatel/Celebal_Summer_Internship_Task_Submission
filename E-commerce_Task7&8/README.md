@@ -1,6 +1,6 @@
-# 🛍️ BlinkMart - Advanced E-commerce Store
+# 🛍️ shopnow - Advanced E-commerce Store
 
-Welcome to **BlinkMart**, a feature-rich, responsive E-commerce platform inspired by Blinkit. This web app allows users to browse products, customize the view, manage their cart, checkout seamlessly, and make secure payments — all in a smooth and user-friendly interface.
+Welcome to **Shopnow**, a feature-rich, responsive E-commerce platform inspired by Blinkit. This web app allows users to browse products, customize the view, manage their cart, checkout seamlessly, and make secure payments — all in a smooth and user-friendly interface.
 
 ---
 
