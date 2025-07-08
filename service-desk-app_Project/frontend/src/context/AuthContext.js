@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const res = await axios.post('http://localhost:5050/api/auth/user', {
+        const res = await axios.post(`${process.env.REACT_APP_API_BASE}/api/auth/user`, {
           uid: user.uid,
           email: user.email,
           fullName: user.displayName || 'User',
