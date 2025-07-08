@@ -9,6 +9,8 @@ A full-stack **Help Desk (Service Desk)** platform that allows users to raise an
 ### 👥 Authentication
 - Secure login and registration using Firebase Auth
 - Role-based access: `user` and `admin`
+- 📧 **Email Notifications**: Users now receive instant email alerts when their ticket status is updated, ensuring real-time communication and improved support experience.
+
 
 ### 🎫 Ticket System
 - Users can raise tickets with:
