@@ -9,7 +9,8 @@ A full-stack **Help Desk (Service Desk)** platform that allows users to raise an
 ### 👥 Authentication
 - Secure login and registration using Firebase Auth
 - Role-based access: `user` and `admin`
-- 📧 **Email Notifications**: Users now receive instant email alerts when their ticket status is updated, ensuring real-time communication and improved support experience.
+
+
 
 
 ### 🎫 Ticket System
@@ -17,12 +18,17 @@ A full-stack **Help Desk (Service Desk)** platform that allows users to raise an
   - Issue description
   - Priority (Low, Medium, High)
   - Category (Technical, Billing, etc.)
-- Track ticket status: Open, Assigned, Resolved
+  - Track ticket status: Open, Assigned, Resolved
+  - Update Ticket: Users can update their ticket details (like description, priority).
+  - Delete Ticket: Users can delete their own tickets.
+  - Comment System: Both Users can add comments to tickets for better communication and collaboration. Comments include timestamps and user details and admin can view the tickets wise comments.
 - Admin can:
   - View all tickets
   - Assign/reschedule tickets
   - Change ticket status
   - Send updates to users
+  - Admins can view the ticket comments with user details.
+  - Email Notifications: Users now receive instant email alerts when their ticket status is updated, ensuring real-time communication and improved support experience.
 
 ### 📊 Dashboards
 - **User Dashboard**: Raise and view tickets
