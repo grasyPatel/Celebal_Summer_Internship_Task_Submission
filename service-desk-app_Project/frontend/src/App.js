@@ -7,7 +7,7 @@ import AdminTicketsPage from './pages/AdminTicketsPage';
 import AdminRoute from './components/AdminRoute';
 
 import emailjs from '@emailjs/browser';
-emailjs.init('xhdHqp4fWbjN2yWnd');
+emailjs.init(process.env.REACT_APP_EMAILJS_PUBLIC_KEY);
 
 const App = () => {
   return (
