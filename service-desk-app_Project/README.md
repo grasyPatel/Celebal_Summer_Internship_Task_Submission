@@ -54,5 +54,73 @@ A full-stack **Help Desk (Service Desk)** platform that allows users to raise an
 
 ---
 
+## 🔧 Environment Variables
+
+### ✅ Frontend (`frontend/.env`)
+
+```env
+# API base URL
+REACT_APP_API_BASE=
+
+# Admin Email for role check password: Qwerty@1234
+REACT_APP_ADMIN_EMAIL=sita@gmail.com
+
+# Firebase Config
+REACT_APP_FIREBASE_API_KEY=y
+REACT_APP_FIREBASE_AUTH_DOMAIN=
+REACT_APP_FIREBASE_PROJECT_ID=
+REACT_APP_FIREBASE_STORAGE_BUCKET=
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=
+REACT_APP_FIREBASE_APP_ID=
+
+# Optional: EmailJS Config
+REACT_APP_EMAILJS_SERVICE_ID=
+REACT_APP_EMAILJS_TEMPLATE_ID=
+REACT_APP_EMAILJS_PUBLIC_KEY=
+```
+### ✅ Frontend (`frontend/.env`)
+```env
+PORT=
+MONGODB_URI=
+
+```
+---
+
+### 🧪 Admin Test Credentials
+- Email:    sita@gmail.com
+- Password: Qwerty@1234
+---
+### 💻 Getting Started Locally
+
+## Clone the repo
+```env 
+git clone https://github.com/grasyPatel/Celebal_Summer_Internship_Task_Submission.git
+cd service-desk-app-Project
+```
+## Setup Backend
+```env
+cd backend
+npm install
+npm run dev
+```
+## Setup Frontend
+```env
+cd /frontend
+npm install
+npm start
+```
+---
+### 🧾 Deployment
+- The app is deployed using Render:
+
+- 🔗 Frontend: https://service-desk-frontend.onrender.com
+- 🔗 Backend: https://service-desk-jz6u.onrender.com
+---
+### 🧑‍💻 Author
+- Grace Patel — @grasyPatel
+
+
+
+
 
 
