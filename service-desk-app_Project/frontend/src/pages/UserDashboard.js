@@ -87,8 +87,7 @@ const UserDashboard = () => {
   const getPriorityColor = (priority) => {
     switch (priority?.toLowerCase()) {
       case "high":
-      case "urgent":
-        return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300";
+     
       case "medium":
         return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300";
       case "low":
@@ -436,7 +435,7 @@ const UserDashboard = () => {
                           <span>{ticket._id}</span>
                         </div>
                         
-                        {/* Action Buttons */}
+                      
                         <div className="flex flex-wrap gap-2">
                           <button
                             onClick={() => openDetailsModal(ticket)}
@@ -635,7 +634,7 @@ const UserDashboard = () => {
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
                     <option value="high">High</option>
-                    <option value="urgent">Urgent</option>
+                    
                   </select>
                 </div>
                 
