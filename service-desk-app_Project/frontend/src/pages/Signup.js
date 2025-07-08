@@ -39,7 +39,6 @@ const Signup = () => {
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
 
-    // Calculate password strength
     if (field === "password") {
       const strength = calculatePasswordStrength(value);
       setPasswordStrength(strength);
@@ -95,22 +94,18 @@ const Signup = () => {
     setError("");
 
     try {
-      // Create user with Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         formData.email,
         formData.password
       );
 
-      // Construct full name
       const fullName = `${formData.firstName.trim()} ${formData.lastName.trim()}`;
 
-      // Update Firebase profile
       await updateProfile(userCredential.user, {
         displayName: fullName,
       });
 
-      // Prepare user data for backend
       const isAdminEmail =
         formData.email.trim() === process.env.REACT_APP_ADMIN_EMAIL;
 
@@ -123,7 +118,6 @@ const Signup = () => {
 
       console.log("Sending to backend:", userData);
 
-      // Send to backend
       const response = await axios.post(
         `${process.env.REACT_APP_API_BASE}/api/auth/user`,
         userData,
@@ -139,16 +133,12 @@ const Signup = () => {
     } catch (err) {
       console.error("Signup error:", err);
 
-      // Handle different types of errors
       if (err.response) {
-        // Backend error
         console.error("Backend error:", err.response.data);
         setError(err.response.data.message || "Failed to create account");
       } else if (err.code) {
-        // Firebase error
         setError(err.message.replace("Firebase: ", ""));
       } else {
-        // Network or other error
         setError("Network error. Please try again.");
       }
     } finally {
@@ -170,7 +160,6 @@ const Signup = () => {
       };
     console.log("Sending to backend:", userData);
 
-      // Send to your backend )
 
       await axios.post(
         `${process.env.REACT_APP_API_BASE}/api/auth/user`,
@@ -200,7 +189,6 @@ const Signup = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900 p-4">
-      {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-purple-400 to-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
         <div
@@ -214,9 +202,7 @@ const Signup = () => {
       </div>
 
       <div className="relative w-full max-w-lg">
-        {/* Signup Card */}
         <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border border-white/20 dark:border-gray-700/50 rounded-2xl shadow-2xl p-8 transform transition-all duration-500 hover:scale-[1.01] hover:shadow-3xl">
-          {/* Header */}
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg transform -rotate-3 hover:rotate-0 transition-transform duration-300">
               <UserPlus className="w-8 h-8 text-white" />
@@ -229,7 +215,6 @@ const Signup = () => {
             </p>
           </div>
 
-          {/* Error Message */}
           {error && (
             <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl flex items-center space-x-3 animate-shake">
               <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
@@ -239,9 +224,7 @@ const Signup = () => {
             </div>
           )}
 
-          {/* Signup Form */}
           <form onSubmit={handleSignup} className="space-y-6">
-            {/* Name Fields */}
             <div className="grid grid-cols-2 gap-4">
               <div className="relative group">
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
@@ -298,7 +281,6 @@ const Signup = () => {
               </div>
             </div>
 
-            {/* Email Input */}
             <div className="relative group">
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                 Email Address
@@ -324,7 +306,6 @@ const Signup = () => {
               </div>
             </div>
 
-            {/* Password Input */}
             <div className="relative group">
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                 Password
@@ -362,7 +343,6 @@ const Signup = () => {
                 </button>
               </div>
 
-              {/* Password Strength Indicator */}
               {formData.password && (
                 <div className="mt-3 space-y-2">
                   <div className="flex items-center justify-between text-xs">
@@ -391,7 +371,6 @@ const Signup = () => {
               )}
             </div>
 
-            {/* Confirm Password Input */}
             <div className="relative group">
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                 Confirm Password
@@ -430,7 +409,6 @@ const Signup = () => {
                 </button>
               </div>
 
-              {/* Password Match Indicator */}
               {formData.confirmPassword && (
                 <div className="mt-2 flex items-center space-x-2 text-sm">
                   {formData.password === formData.confirmPassword ? (
@@ -452,7 +430,6 @@ const Signup = () => {
               )}
             </div>
 
-            {/* Password Requirements */}
             {formData.password && (
               <div className="bg-gray-50 dark:bg-gray-700/30 rounded-xl p-4">
                 <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">
@@ -484,7 +461,6 @@ const Signup = () => {
               </div>
             )}
 
-            {/* Create Account Button */}
             <button
               type="submit"
               disabled={loading}
@@ -528,7 +504,6 @@ const Signup = () => {
             </div>
           </form>
 
-          {/* Login Link */}
           <div className="mt-8 text-center">
             <p className="text-gray-600 dark:text-gray-300 text-sm">
               Already have an account?{" "}
@@ -542,7 +517,6 @@ const Signup = () => {
           </div>
         </div>
 
-        {/* Footer */}
         <div className="mt-4 text-center"></div>
       </div>
     </div>

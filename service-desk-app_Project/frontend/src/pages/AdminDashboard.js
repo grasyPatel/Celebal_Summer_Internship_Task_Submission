@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
-import { RefreshCw, Users, Ticket, Clock, CheckCircle, AlertCircle, TrendingUp, Calendar, Menu, X, Settings, FileText, UserPlus, BarChart3 } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, } from 'recharts';
+import { RefreshCw, Users, Ticket, Clock, CheckCircle, AlertCircle, TrendingUp, Menu, X,  FileText,  BarChart3 } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 
@@ -22,10 +22,8 @@ const AdminDashboard = () => {
   const [lastUpdated, setLastUpdated] = useState(null);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   
-  // New states for Quick Actions
   const [showUserManagement, setShowUserManagement] = useState(false);
   const [showReports, setShowReports] = useState(false);
-  const [showSchedule, setShowSchedule] = useState(false);
   const [users, setUsers] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
 
@@ -34,29 +32,24 @@ const AdminDashboard = () => {
       setLoading(true);
       setError(null);
 
-      // Use same approach as AdminTicketsPage
       const apiBase = process.env.REACT_APP_API_BASE;
 
-      // Fetch tickets
       const ticketsRes = await axios.get(`${apiBase}/api/tickets`, {
         params: { role: 'admin' },
       });
       console.log("Dashboard - Tickets:", ticketsRes.data);
       const tickets = Array.isArray(ticketsRes.data) ? ticketsRes.data : ticketsRes.data.tickets || [];
 
-      // Fetch users
       let users = [];
       try {
         const usersRes = await axios.get(`${apiBase}/api/users`);
         console.log("Dashboard - Users:", usersRes.data);
         users = Array.isArray(usersRes.data) ? usersRes.data : usersRes.data.users || [];
-        setUsers(users); // Store users for Quick Actions
+        setUsers(users); 
       } catch (userErr) {
         console.warn('Failed to fetch users:', userErr);
-        // Continue without user data if endpoint doesn't exist
       }
 
-      // Process stats - matching the status values from AdminTicketsPage
       const processedStats = {
         totalTickets: tickets.length,
         open: tickets.filter(t => t.status === 'Open').length,
@@ -93,37 +86,29 @@ const AdminDashboard = () => {
     }
   };
 
-  // Quick Action Handlers
   const handleManageUsers = () => {
     setShowUserManagement(true);
     setShowReports(false);
-    setShowSchedule(false);
+   
   };
 
   const handleViewReports = () => {
     setShowReports(true);
     setShowUserManagement(false);
-    setShowSchedule(false);
+    
   };
 
-  const handleSchedule = () => {
-    setShowSchedule(true);
-    setShowUserManagement(false);
-    setShowReports(false);
-  };
-
+  
   const handleUserRoleChange = async (userId, newRole) => {
     try {
       setLoadingUsers(true);
       const apiBase = process.env.REACT_APP_API_BASE;
       await axios.put(`${apiBase}/api/users/${userId}`, { role: newRole });
       
-      // Refresh user data
       const usersRes = await axios.get(`${apiBase}/api/users`);
       const updatedUsers = Array.isArray(usersRes.data) ? usersRes.data : usersRes.data.users || [];
       setUsers(updatedUsers);
       
-      // Refresh dashboard stats
       fetchDashboardData();
     } catch (err) {
       console.error('Failed to update user role:', err);
@@ -213,7 +198,6 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Mobile Header */}
       <div className="lg:hidden shadow-sm border-b sticky bg-gray-200 top-0 z-10">
         <div className="flex items-center justify-between p-4">
           <h1 className="text-xl font-bold">Dashboard</h1>
@@ -249,7 +233,6 @@ const AdminDashboard = () => {
       </div>
 
       <div className="max-w-7xl mx-auto p-4 lg:p-6 space-y-4 lg:space-y-6">
-        {/* Desktop Header */}
         <div className="hidden lg:flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-2">
@@ -276,7 +259,6 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Error Message */}
         {error && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
             <div className="flex items-center space-x-2">
@@ -286,7 +268,6 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        {/* Stats Cards - Responsive Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
           <DashboardCard 
             title="Total Tickets" 
@@ -332,9 +313,7 @@ const AdminDashboard = () => {
           />
         </div>
 
-        {/* Charts Section - Responsive */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-6">
-          {/* Bar Chart */}
           <div className="bg-transparent p-4 lg:p-6 rounded-xl shadow-sm border">
             <h3 className="text-lg font-semibold mb-4">Ticket Status Overview</h3>
             <ResponsiveContainer width="100%" height={250}>
@@ -352,7 +331,6 @@ const AdminDashboard = () => {
             </ResponsiveContainer>
           </div>
 
-          {/* Pie Chart */}
           <div className="bg-transparent p-4 lg:p-6 rounded-xl shadow-sm border">
             <h3 className="text-lg font-semibold mb-4">Status Distribution</h3>
             <ResponsiveContainer width="100%" height={250}>
@@ -376,14 +354,12 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Recent Tickets Table - Mobile Responsive */}
         <div className="rounded-xl shadow-sm border">
           <div className="p-4 lg:p-6 border-b border-gray-200">
             <h3 className="text-3xl font-semibold">Recent Tickets</h3>
             <p className="text-sm">Latest support tickets and their status</p>
           </div>
           
-          {/* Mobile Card View */}
           <div className="lg:hidden">
             {recentTickets && recentTickets.length > 0 ? (
               <div className="divide-y divide-gray-200">
@@ -421,7 +397,6 @@ const AdminDashboard = () => {
             )}
           </div>
 
-          {/* Desktop Table View */}
           <div className="hidden lg:block overflow-x-auto">
             <table className="w-full">
               <thead className="divide-x divide-gray-200">
@@ -474,7 +449,6 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Quick Actions - Enhanced with Working Functionality */}
         <div className="p-4 lg:p-6 rounded-xl shadow-sm border">
           <h3 className="text-3xl font-semibold mb-4">Quick Actions</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-3 lg:gap-4 w-full">
@@ -496,7 +470,6 @@ const AdminDashboard = () => {
           </div> 
         </div>
 
-        {/* User Management Modal */}
         {showUserManagement && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-green-100 rounded-xl p-6 max-w-4xl w-full mx-4 max-h-[80vh] overflow-y-auto">
@@ -558,7 +531,6 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        {/* Reports Modal */}
         {showReports && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-green-100 rounded-xl p-6 max-w-2xl w-full mx-4">

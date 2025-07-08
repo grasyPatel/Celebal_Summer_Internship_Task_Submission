@@ -31,10 +31,7 @@ const Login = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
 
-      const userEmail = email.trim().toLowerCase();
-      const adminEmail =
-        process.env.REACT_APP_ADMIN_EMAIL?.trim().toLowerCase();
-
+     
       
       navigate("/dashboard");
       
@@ -58,7 +55,6 @@ const Login = () => {
           user.email === process.env.REACT_APP_ADMIN_EMAIL ? "admin" : "user",
       };
 
-      // Send to your backend
       await axios.post(
         `${process.env.REACT_APP_API_BASE}/api/auth/user`,
         userData,
@@ -75,7 +71,6 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900 p-4">
-      {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
         <div
@@ -85,9 +80,7 @@ const Login = () => {
       </div>
 
       <div className="relative w-full max-w-md">
-        {/* Login Card */}
         <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border border-white/20 dark:border-gray-700/50 rounded-2xl shadow-2xl p-8 transform transition-all duration-500 hover:scale-[1.02] hover:shadow-3xl">
-          {/* Header */}
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg transform rotate-3 hover:rotate-0 transition-transform duration-300">
               <LogIn className="w-8 h-8 text-white" />
@@ -100,7 +93,6 @@ const Login = () => {
             </p>
           </div>
 
-          {/* Error Message */}
           {error && (
             <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl flex items-center space-x-3 animate-shake">
               <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
@@ -110,9 +102,7 @@ const Login = () => {
             </div>
           )}
 
-          {/* Login Form */}
           <form onSubmit={handleLogin} className="space-y-6">
-            {/* Email Input */}
             <div className="relative group">
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                 Email Address
@@ -138,7 +128,6 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Password Input */}
             <div className="relative group">
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                 Password
@@ -175,26 +164,8 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Remember Me & Forgot Password
-            <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center space-x-2 cursor-pointer group">
-                <input 
-                  type="checkbox" 
-                  className="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 rounded focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
-                <span className="text-gray-600 dark:text-gray-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                  Remember me
-                </span>
-              </label>
-              <Link 
-                to="/forgot-password" 
-                className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium hover:underline transition-colors"
-              >
-                Forgot password?
-              </Link>
-            </div> */}
 
-            {/* Login Button */}
+          
             <button
               type="submit"
               disabled={loading}
@@ -213,7 +184,6 @@ const Login = () => {
               )}
             </button>
 
-            {/* Divider */}
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
@@ -225,7 +195,6 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Social Login Buttons */}
 
             <button
               onClick={handleGoogleSignIn}
@@ -240,7 +209,6 @@ const Login = () => {
             </button>
           </form>
 
-          {/* Sign Up Link */}
           <div className="mt-8 text-center">
             <p className="text-gray-600 dark:text-gray-300 text-sm">
               Don't have an account?{" "}
@@ -254,7 +222,6 @@ const Login = () => {
           </div>
         </div>
 
-        {/* Footer */}
         <div className="mt-8 text-center"></div>
       </div>
     </div>
