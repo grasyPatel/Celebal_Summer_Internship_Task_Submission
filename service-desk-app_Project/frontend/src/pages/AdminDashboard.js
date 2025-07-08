@@ -198,12 +198,12 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="lg:hidden shadow-sm border-b sticky bg-gray-200 top-0 z-10">
+      <div className="lg:hidden shadow-sm border-b sticky top-0 z-10">
         <div className="flex items-center justify-between p-4">
           <h1 className="text-xl font-bold">Dashboard</h1>
           <button
             onClick={() => setShowMobileMenu(!showMobileMenu)}
-            className="p-2 rounded-md hover:bg-gray-100"
+            className="p-2 rounded-md hover:bg-gray-100 hover:text-black"
           >
             {showMobileMenu ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
