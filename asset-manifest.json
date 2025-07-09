@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/Celebal_Summer_Internship_Task_Submission/static/css/main.9bb90ce8.css",
+    "main.js": "/Celebal_Summer_Internship_Task_Submission/static/js/main.e859c75c.js",
+    "index.html": "/Celebal_Summer_Internship_Task_Submission/index.html",
+    "main.9bb90ce8.css.map": "/Celebal_Summer_Internship_Task_Submission/static/css/main.9bb90ce8.css.map",
+    "main.e859c75c.js.map": "/Celebal_Summer_Internship_Task_Submission/static/js/main.e859c75c.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9bb90ce8.css",
+    "static/js/main.e859c75c.js"
+  ]
+}
