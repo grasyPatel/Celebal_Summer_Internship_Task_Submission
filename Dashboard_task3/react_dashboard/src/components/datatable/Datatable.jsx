@@ -1,6 +1,6 @@
 import "./datatable.scss";
 import { Link } from "react-router-dom";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid} from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 import { userColumns, userRows } from "../../datatablesource";
 const paginationModel = { page: 0, pageSize: 9 };
