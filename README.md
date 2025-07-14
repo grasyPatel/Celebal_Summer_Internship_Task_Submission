@@ -105,10 +105,16 @@ Welcome to **Shopnow**, a feature-rich, responsive E-commerce platform inspired 
 
 ## 🔥 Features
 
-### 🧾 Product Listings
-- View products in **List** or **Grid** formats
-- Filter by categories, price, brand, etc.
-- Product quick-view with details
+- Modern E-commerce UI with responsive design using React & Tailwind CSS
+- Product Filtering & Sorting by category, price, gender, size, color, brand
+- Multiple Image Uploads via Cloudinary for each product
+- State Management using Redux Toolkit
+- Order Summary & History with secure checkout flow
+- Admin Panel for product management
+- JWT Authentication for user login and secure route
+- PayPal Integration for payments
+- Dynamic Price Calculation including tax and shipping
+- You May Also Like & Best Seller product recommendations
   
 
 ---
