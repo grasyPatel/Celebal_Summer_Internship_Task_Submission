@@ -2,10 +2,14 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import loginImage from "../assets/login.webp"; // adjust path if needed
+import { loginUser } from "../redux/slices/authSlice";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -14,13 +18,8 @@ const Login = () => {
       toast.error("Please enter both email and password");
       return;
     }
+    dispatch(loginUser({ email, password }));
 
-    // Dummy logic – replace with actual auth logic
-    toast.success("Logged in successfully");
-
-    // Clear fields after login
-    setEmail("");
-    setPassword("");
   };
 
   return (

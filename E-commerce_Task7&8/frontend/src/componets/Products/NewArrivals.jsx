@@ -1,18 +1,32 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, use } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { products } from './product'; // Import from shared file
+import axios from 'axios';
 
-// Dummy Data
-const products = Array.from({ length: 12 }).map((_, i) => ({
-  id: i + 1,
-  name: `Product ${i + 1}`,
-  price: `${10 + i * 5}`,
-  image: `https://picsum.photos/400/500?random=${i + 1}`,
-}));
 
 const NewArrivals = () => {
   const scrollRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [newArrivals, setNewArrivals] = useState([]);
+  useEffect(() => {
+    const fetchNewArrivals = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/new-arrivals`);
+
+        const data = response.data;
+        console.log(data);
+        setNewArrivals(data);
+
+      }catch(error){
+        console.log(error);
+      }  
+    }
+    fetchNewArrivals();
+    
+
+  },[])
 
   const checkScroll = () => {
     const el = scrollRef.current;
@@ -26,7 +40,7 @@ const NewArrivals = () => {
     checkScroll();
     window.addEventListener('resize', checkScroll);
     return () => window.removeEventListener('resize', checkScroll);
-  }, []);
+  }, [newArrivals]);
 
   const scroll = (direction) => {
     const el = scrollRef.current;
@@ -69,24 +83,24 @@ const NewArrivals = () => {
       <div
         ref={scrollRef}
         onScroll={checkScroll}
-        className="flex overflow-x-auto space-x-4 scroll-smooth pb-2"
+        className=" h-5/6 flex overflow-x-auto space-x-4 scroll-smooth pb-2"
       >
-        {products.map((product) => (
-          <div
-            key={product.id}
+        {newArrivals.map((product) => (
+          <Link
+            to={`/product/${product.id}`}
+            key={product._id}
             className="relative min-w-[240px] md:min-w-[290px] h-[360px] rounded-lg overflow-hidden flex-shrink-0"
-          >
+           >
             <img
-              src={product.image}
-              alt={product.name}
+              src={product.images[0]?.url} // Use first image from the images array
+               alt={product.images[0]?.altText || product.name}
               className="w-full h-full object-cover"
             />
-            {/* Overlay */}
             <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-3 text-white">
               <h3 className="text-sm font-semibold">{product.name}</h3>
-              <p className="text-sm text-gray-300">${product.price}</p>
+              <p className="text-sm text-gray-300">${product.price.toFixed(2)}</p>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </section>

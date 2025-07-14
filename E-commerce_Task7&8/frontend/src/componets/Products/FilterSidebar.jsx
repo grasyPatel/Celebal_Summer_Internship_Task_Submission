@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FiX, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import SortOption from "./SortOption";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const filters = {
   category: ["Top Wear", "Bottom Wear"],
@@ -8,47 +9,61 @@ const filters = {
   colors: ["#000", "#f00", "#0f0", "#00f", "#ff0", "#0ff", "#fff", "#808080"],
   sizes: ["XS", "S", "M", "L", "XL", "XXL"],
   materials: ["Cotton", "Polyester", "Denim", "Linen", "Wool"],
-  brands: ["UrbanEdge", "EcoWear", "GreenFit", "MinimalWear"]
+  brands: ["UrbanEdge", "EcoWear", "GreenFit", "MinimalWear"],
 };
 
-const FilterSidebar = ({ 
-  showFilters, 
-  setShowFilters, 
-  selectedFilters, 
+const FilterSidebar = ({
+  showFilters,
+  setShowFilters,
+  selectedFilters,
   setSelectedFilters,
   sortBy,
   setSortBy,
   expandedSections,
   setExpandedSections,
-  filteredProductsCount
+  filteredProductsCount,
 }) => {
-  
+  const navigate = useNavigate();
+  const [, setSearchParams] = useSearchParams();
+
   const toggleSection = (section) => {
-    setExpandedSections(prev => ({
+    setExpandedSections((prev) => ({
       ...prev,
-      [section]: !prev[section]
+      [section]: !prev[section],
     }));
   };
 
+  // No longer calls updateUrlParams directly
   const handleFilterChange = (filterType, value) => {
-    setSelectedFilters(prev => ({
-      ...prev,
-      [filterType]: prev[filterType] 
-        ? prev[filterType].includes(value)
-          ? prev[filterType].filter(item => item !== value)
-          : [...prev[filterType], value]
-        : [value]
-    }));
+    setSelectedFilters((prev) => {
+      const current = prev[filterType] || [];
+      const updated = current.includes(value)
+        ? current.filter((item) => item !== value)
+        : [...current, value];
+
+      return {
+        ...prev,
+        [filterType]: updated,
+      };
+    });
   };
 
   const clearAllFilters = () => {
     setSelectedFilters({});
   };
 
-  const updateUrlParams=(newFilters)=>{
-    const params=new URLSearchParams();
-    //{Category:""}
-  }
+  useEffect(() => {
+    const params = new URLSearchParams();
+
+    Object.entries(selectedFilters).forEach(([key, value]) => {
+      if (Array.isArray(value) && value.length > 0) {
+        params.set(key, value.join(","));
+      }
+    });
+
+    setSearchParams(params);
+    navigate(`?${params.toString()}`, { replace: true });
+  }, [selectedFilters]);
 
   return (
     <>
@@ -99,12 +114,13 @@ const FilterSidebar = ({
                       </span>
                     )}
                   </h4>
-                  {expandedSections[filterName] ? 
-                    <FiChevronUp size={16} /> : 
+                  {expandedSections[filterName] ? (
+                    <FiChevronUp size={16} />
+                  ) : (
                     <FiChevronDown size={16} />
-                  }
+                  )}
                 </button>
-                
+
                 {expandedSections[filterName] && (
                   <div className="mt-3">
                     {filterName === "colors" ? (
@@ -114,7 +130,9 @@ const FilterSidebar = ({
                             key={i}
                             style={{ backgroundColor: color }}
                             className="w-8 h-8 rounded-full border-2 border-gray-300 hover:border-gray-500 transition-colors relative"
-                            onClick={() => handleFilterChange(filterName, color)}
+                            onClick={() =>
+                              handleFilterChange(filterName, color)
+                            }
                           >
                             {selectedFilters[filterName]?.includes(color) && (
                               <div className="absolute inset-0 rounded-full border-2 border-blue-600 bg-black bg-opacity-20"></div>
@@ -130,8 +148,8 @@ const FilterSidebar = ({
                             onClick={() => handleFilterChange(filterName, size)}
                             className={`text-xs border px-3 py-2 rounded-lg text-center transition-colors ${
                               selectedFilters[filterName]?.includes(size)
-                                ? 'bg-black text-white border-black'
-                                : 'border-gray-300 hover:border-gray-500'
+                                ? "bg-black text-white border-black"
+                                : "border-gray-300 hover:border-gray-500"
                             }`}
                           >
                             {size}
@@ -141,11 +159,19 @@ const FilterSidebar = ({
                     ) : (
                       <div className="space-y-2">
                         {options.map((opt) => (
-                          <label key={opt} className="flex items-center cursor-pointer group">
-                            <input 
-                              type="checkbox" 
-                              checked={selectedFilters[filterName]?.includes(opt) || false}
-                              onChange={() => handleFilterChange(filterName, opt)}
+                          <label
+                            key={opt}
+                            className="flex items-center cursor-pointer group"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={
+                                selectedFilters[filterName]?.includes(opt) ||
+                                false
+                              }
+                              onChange={() =>
+                                handleFilterChange(filterName, opt)
+                              }
                               className="mr-3 w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
                             />
                             <span className="text-sm text-gray-700 group-hover:text-gray-900">
@@ -161,7 +187,7 @@ const FilterSidebar = ({
             ))}
 
             {/* Mobile Sort */}
-            <SortOption 
+            <SortOption
               sortBy={sortBy}
               setSortBy={setSortBy}
               variant="mobile"

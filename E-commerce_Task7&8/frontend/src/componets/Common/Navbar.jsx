@@ -67,6 +67,7 @@ const Navbar = () => {
 
         {/* Icons */}
         <div className="flex items-center space-x-4">
+          <Link to="/admin" className="text-white bg-black px-2 rounded">Admin</Link>
           <Link to="/profile" className="hover:text-black">
             <HiOutlineUser className="h-6 w-6 text-gray-700" />
           </Link>
@@ -109,7 +110,7 @@ const Navbar = () => {
           {['Men', 'Women', 'Top Wear', 'Bottom Wear'].map((item) => (
             <Link
               key={item}
-              to="/"
+              to="/collections/all"
               className="text-gray-700 text-base font-medium hover:text-black uppercase"
               onClick={toggleNavDrawer}
             >

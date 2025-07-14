@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import registerImage from "../assets/register.webp"; // Adjust the path if needed
 import { toast } from "sonner";
+import { registerUser } from "../redux/slices/authSlice";
+import { useDispatch } from "react-redux";
 
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const dispatch = useDispatch();
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -16,6 +19,8 @@ const Register = () => {
       toast.error("Passwords do not match");
       return;
     }
+    dispatch(registerUser({ name, email, password }));
+
 
     // You can replace this with API call
     toast.success("Registration successful!");
