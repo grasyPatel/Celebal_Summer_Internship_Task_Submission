@@ -32,7 +32,7 @@ initializeSocket(httpServer);
 
 app.use(cors(
   {
-    origin:"http://localhost:3000",
+    origin:"https://celebal-summer-internship-task-submission.onrender.com",
     credentials:true,
   }
 ));
